@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KSC HSC 2K27 - Student Academic Portal</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f6ff',
+              100: '#e0edff',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Font Awesome 6 CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Inter -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap">
+  <!-- Marked.js CDN for Markdown rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    .glass-header {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .dark .glass-header {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #334155;
+    }
+
+    /* Active Navigation Style */
+    .nav-btn.active {
+      background-color: #2563eb;
+      color: #ffffff !important;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+    }
+    .nav-btn.active:hover {
+      background-color: #1d4ed8;
+      color: #ffffff !important;
+    }
+    .nav-btn.active i {
+      color: #ffffff !important;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 min-h-screen flex flex-col selection:bg-blue-500 selection:text-white">
+
+  <!-- Offline Banner -->
+  <div id="offline-banner" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-bold text-center flex items-center justify-center gap-2 sticky top-0 z-50 shadow-md" role="alert">
+    <i class="fa-solid fa-wifi font-bold animate-pulse" aria-hidden="true"></i>
+    <span>Offline Mode Active. Cached content & documents available.</span>
+  </div>
+
+  <!-- Dynamic Announcement & Exam Countdown Bar -->
+  <div id="announcement-bar" class="bg-gradient-to-r from-indigo-700 via-blue-700 to-purple-800 text-white px-4 py-2.5 shadow-md relative z-30 transition-all border-b border-white/10" role="region" aria-label="Important Announcement">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs">
+      <div class="flex items-center space-x-2 font-medium">
+        <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-400 text-slate-950 flex items-center gap-1">
+          <i class="fa-solid fa-triangle-exclamation"></i> Notice
+        </span>
+        <span id="announcement-msg" class="font-bold">Pre-Test Exam Starts Nov 26, 2026!</span>
+      </div>
+      
+      <!-- Compact Live Countdown -->
+      <div class="flex items-center space-x-3">
+        <div id="countdown-timer" class="flex items-center space-x-1.5 font-mono text-[11px] bg-black/30 backdrop-blur-md px-3 py-1 rounded-xl border border-white/10">
+          <span class="text-amber-300 font-bold" id="cd-text">Starts in:</span>
+          <span id="cd-days" class="font-bold">00</span>d :
+          <span id="cd-hours" class="font-bold">00</span>h :
+          <span id="cd-mins" class="font-bold">00</span>m :
+          <span id="cd-secs" class="font-bold text-amber-300">00</span>s
+        </div>
+        <button onclick="dismissAnnouncementBar()" class="text-white/80 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors" aria-label="Close Announcement Bar">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="sticky top-0 z-40 w-full glass-header border-b border-slate-200/80 dark:border-slate-800/80 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        
+        <!-- Branding -->
+        <div class="flex items-center space-x-3 cursor-pointer group shrink-0" onclick="switchView('home')">
+          <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white text-xl font-black shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-lg font-black tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent leading-none">
+              KSC HSC 2K27
+            </span>
+            <span class="text-[11px] text-slate-500 dark:text-slate-400 font-semibold mt-1">
+              Made by Md. Ashiqul Islam Ashik
+            </span>
+          </div>
+        </div>
+
+        <!-- Desktop Navigation Bar -->
+        <nav class="hidden md:flex items-center space-x-1.5 font-medium text-xs">
+          <button onclick="switchView('home')" id="nav-home" class="nav-btn active flex flex-col items-center justify-center px-3.5 py-2 rounded-xl transition-all hover:bg-slate-100 dark:hover:bg-slate-800/80">
+            <i class="fa-solid fa-house text-base mb-1 text-sky-400"></i>
+            <span>Home</span>
+          </button>
+          <button onclick="switchView('routine')" id="nav-routine" class="nav-btn flex flex-col items-center justify-center px-3.5 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
+            <i class="fa-solid fa-calendar-days text-base mb-1 text-teal-400"></i>
+            <span>Class Routine</span>
+          </button>
+          <button onclick="switchView('announcements')" id="nav-announcements" class="nav-btn flex flex-col items-center justify-center px-3.5 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
+            <i class="fa-solid fa-bullhorn text-base mb-1 text-amber-400"></i>
+            <span>Notices</span>
+          </button>
+          <button onclick="switchView('notes')" id="nav-notes" class="nav-btn flex flex-col items-center justify-center px-3.5 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
+            <i class="fa-solid fa-book-open text-base mb-1 text-emerald-400"></i>
+            <span>Notes</span>
+          </button>
+          <button onclick="switchView('questions')" id="nav-questions" class="nav-btn flex flex-col items-center justify-center px-3.5 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
+            <i class="fa-solid fa-photo-film text-base mb-1 text-purple-400"></i>
+            <span>Resource Vault</span>
+          </button>
+
+          <button onclick="toggleTheme()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors ml-2">
+            <i id="theme-toggle-icon" class="fa-solid fa-moon text-base text-amber-400"></i>
+          </button>
+        </nav>
+
+        <!-- Mobile Header Controls -->
+        <div class="flex items-center space-x-2 md:hidden">
+          <button onclick="toggleTheme()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+            <i id="theme-toggle-icon-mobile" class="fa-solid fa-moon text-base text-amber-400"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-28 md:pb-12">
+
+    <!-- VIEW 1: HOME PAGE -->
+    <section id="view-home" class="view-section space-y-6">
+      
+      <!-- Minimalist Compact Banner -->
+      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-800 text-white p-4 sm:p-5 shadow-md">
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <h1 class="text-lg sm:text-xl font-black tracking-tight">
+              KSC HSC 2K27 Portal
+            </h1>
+            <p class="text-xs text-blue-100 mt-0.5">
+              Class routines, study notes, question archive, and AI study tools.
+            </p>
+          </div>
+          <span class="text-[10px] bg-amber-400/20 text-amber-200 border border-amber-400/30 px-2.5 py-1 rounded-full font-bold shrink-0">Pre-Test: Nov 26, 2026</span>
+        </div>
+      </div>
+
+      <!-- Navigation Grid -->
+      <div class="space-y-3">
+        <h2 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <i class="fa-solid fa-border-all text-blue-500" aria-hidden="true"></i> Quick Navigation
+        </h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+          
+          <button onclick="switchView('routine')" class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-teal-500 transition-all text-center space-y-1.5 group">
+            <div class="w-9 h-9 mx-auto rounded-xl bg-teal-100 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-calendar-days"></i>
+            </div>
+            <div>
+              <span class="block text-xs font-bold text-slate-900 dark:text-slate-100">Class Routine</span>
+              <span class="text-[10px] text-slate-400">Timetable</span>
+            </div>
+          </button>
+
+          <button onclick="switchView('announcements')" class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-amber-500 transition-all text-center space-y-1.5 group">
+            <div class="w-9 h-9 mx-auto rounded-xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-bullhorn"></i>
+            </div>
+            <div>
+              <span class="block text-xs font-bold text-slate-900 dark:text-slate-100">Notices</span>
+              <span class="text-[10px] text-slate-400">Announcements</span>
+            </div>
+          </button>
+
+          <button onclick="switchView('notes')" class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-emerald-500 transition-all text-center space-y-1.5 group">
+            <div class="w-9 h-9 mx-auto rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-book-open"></i>
+            </div>
+            <div>
+              <span class="block text-xs font-bold text-slate-900 dark:text-slate-100">Subject Notes</span>
+              <span class="text-[10px] text-slate-400">Class Materials</span>
+            </div>
+          </button>
+
+          <button onclick="switchView('questions')" class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-purple-500 transition-all text-center space-y-1.5 group">
+            <div class="w-9 h-9 mx-auto rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-photo-film"></i>
+            </div>
+            <div>
+              <span class="block text-xs font-bold text-slate-900 dark:text-slate-100">Resource Vault</span>
+              <span class="text-[10px] text-slate-400">Routines, Questions & Photos</span>
+            </div>
+          </button>
+
+          <!-- Contact Link -->
+          <a href="https://www.facebook.com/pixelatedlevel/" target="_blank" class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-blue-500 transition-all text-center space-y-1.5 group block col-span-2 sm:col-span-1">
+            <div class="w-9 h-9 mx-auto rounded-xl bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              <i class="fa-brands fa-facebook"></i>
+            </div>
+            <div>
+              <span class="block text-xs font-bold text-slate-900 dark:text-slate-100">Contact Ashik</span>
+              <span class="text-[10px] text-slate-400">Facebook Profile</span>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
+      <!-- NotebookLM AI Workspaces Section on Home Page -->
+      <div class="space-y-3 pt-2">
+        <h2 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <i class="fa-solid fa-robot text-indigo-500"></i> NotebookLM AI Tutors
+        </h2>
+
+        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          
+          <a href="https://notebook.google.com/notebook/438e656f-656c-4eed-8eec-8d5bf80342fd" target="_blank" class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-blue-500 transition-all text-center space-y-1.5 group block">
+            <div class="w-9 h-9 mx-auto rounded-xl bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-laptop-code"></i>
+            </div>
+            <div>
+              <span class="block text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center justify-center gap-1">
+                ICT AI <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-blue-500"></i>
+              </span>
+              <span class="text-[10px] text-slate-400">Workspace</span>
+            </div>
+          </a>
+
+          <a href="https://notebook.google.com/notebook/245cb4a0-de08-4c6e-8b57-7a9b5c92953c" target="_blank" class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-purple-500 transition-all text-center space-y-1.5 group block">
+            <div class="w-9 h-9 mx-auto rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-atom"></i>
+            </div>
+            <div>
+              <span class="block text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center justify-center gap-1">
+                Physics AI <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-purple-500"></i>
+              </span>
+              <span class="text-[10px] text-slate-400">Workspace</span>
+            </div>
+          </a>
+
+          <a href="https://notebook.google.com/notebook/ce7afc49-4714-4246-b915-f7137c672978" target="_blank" class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-emerald-500 transition-all text-center space-y-1.5 group block">
+            <div class="w-9 h-9 mx-auto rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-flask"></i>
+            </div>
+            <div>
+              <span class="block text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center justify-center gap-1">
+                Chemistry AI <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-emerald-500"></i>
+              </span>
+              <span class="text-[10px] text-slate-400">Workspace</span>
+            </div>
+          </a>
+
+          <a href="https://notebook.google.com/notebook/3feba8cb-baef-4de6-831e-619c6f73a7db" target="_blank" class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-amber-500 transition-all text-center space-y-1.5 group block">
+            <div class="w-9 h-9 mx-auto rounded-xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-calculator"></i>
+            </div>
+            <div>
+              <span class="block text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center justify-center gap-1">
+                Math AI <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-amber-500"></i>
+              </span>
+              <span class="text-[10px] text-slate-400">Workspace</span>
+            </div>
+          </a>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- VIEW 2: SUBJECT NOTES -->
+    <section id="view-notes" class="view-section hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+        <div>
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <i class="fa-solid fa-book-open text-emerald-500"></i> Lecture Notes & Material
+          </h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Filter study materials by subject or paper</p>
+        </div>
+        <div class="flex flex-wrap gap-1.5">
+          <button onclick="filterNotes('all')" id="filter-subject-all" class="note-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-600 text-white">All</button>
+          <button onclick="filterNotes('ICT')" id="filter-subject-ICT" class="note-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">ICT</button>
+          <button onclick="filterNotes('Physics')" id="filter-subject-Physics" class="note-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Physics</button>
+          <button onclick="filterNotes('Chemistry')" id="filter-subject-Chemistry" class="note-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Chemistry</button>
+          <button onclick="filterNotes('Math')" id="filter-subject-Math" class="note-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Math</button>
+          <div class="h-6 w-[1px] bg-slate-200 dark:bg-slate-700 mx-1 self-center"></div>
+          <button onclick="filterNotesPaper('1st Paper')" id="filter-paper-1st" class="note-paper-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">1st Paper</button>
+          <button onclick="filterNotesPaper('2nd Paper')" id="filter-paper-2nd" class="note-paper-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">2nd Paper</button>
+        </div>
+      </div>
+
+      <div id="notes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- VIEW 3: CLASS ROUTINE -->
+    <section id="view-routine" class="view-section hidden space-y-6">
+      <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <i class="fa-solid fa-calendar-days text-teal-500"></i> Class Routine Timetable
+          </h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Official daily schedule split by academic group</p>
+        </div>
+        
+        <!-- Routine Switcher -->
+        <div class="flex flex-wrap p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl gap-1">
+          <button onclick="switchRoutineGroup('science')" id="grp-btn-science" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm">Science</button>
+          <button onclick="switchRoutineGroup('business')" id="grp-btn-business" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-400">Business Studies</button>
+          <button onclick="switchRoutineGroup('humanities')" id="grp-btn-humanities" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-400">Humanities</button>
+          <button onclick="switchRoutineGroup('exam')" id="grp-btn-exam" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+            <i class="fa-solid fa-clock font-bold"></i> Exam Routine <span class="px-1.5 py-0.5 rounded-full text-[9px] bg-amber-500/20 text-amber-600 dark:text-amber-300">Coming Soon</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="routine-container" class="space-y-6">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- VIEW 4: NOTEBOOKLM AI -->
+    <section id="view-notebooklm" class="view-section hidden space-y-6">
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-6 sm:p-8 rounded-3xl text-white shadow-xl space-y-3 border border-indigo-900/50">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/20 border border-indigo-400/30 text-indigo-300">
+          <i class="fa-solid fa-microchip"></i> AI Companion Hub
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black">NotebookLM Subject Workspaces</h2>
+        <p class="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
+          Select a subject workspace below to launch Google NotebookLM initialized with your syllabus sources.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-2xl font-bold">
+              <i class="fa-solid fa-laptop-code"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white">ICT AI Workspace</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Ask questions, request code debugging, and generate summaries for C programming, HTML, and Data Communication.</p>
+          </div>
+          <a href="https://notebook.google.com/notebook/438e656f-656c-4eed-8eec-8d5bf80342fd" target="_blank" class="w-full py-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors">
+            Open ICT AI Notebook <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center text-2xl font-bold">
+              <i class="fa-solid fa-atom"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Physics AI Workspace</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Trained on Vector, Dynamics, Thermodynamics, and Gravitation chapters for numerical and conceptual help.</p>
+          </div>
+          <a href="https://notebook.google.com/notebook/245cb4a0-de08-4c6e-8b57-7a9b5c92953c" target="_blank" class="w-full py-3 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors">
+            Open Physics AI Notebook <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-2xl font-bold">
+              <i class="fa-solid fa-flask"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Chemistry AI Workspace</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Covers Organic Chemistry mechanisms, Qualitative Analysis, Atomic Models, and formula derivation.</p>
+          </div>
+          <a href="https://notebook.google.com/notebook/ce7afc49-4714-4246-b915-f7137c672978" target="_blank" class="w-full py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors">
+            Open Chemistry AI Notebook <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+          <div class="space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl font-bold">
+              <i class="fa-solid fa-calculator"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white">Higher Math AI Workspace</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Explains Matrix properties, Differential & Integral Calculus, and Trigonometry step-by-step.</p>
+          </div>
+          <a href="https://notebook.google.com/notebook/3feba8cb-baef-4de6-831e-619c6f73a7db" target="_blank" class="w-full py-3 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors">
+            Open Math AI Notebook <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- VIEW 5: QUESTION ARCHIVE -->
+    <section id="view-questions" class="view-section hidden space-y-6">
+      <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <i class="fa-solid fa-photo-film text-purple-500"></i> Resource & Photo Vault
+          </h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Class routines, notice photos, question papers, practice materials & important snapshots</p>
+        </div>
+      </div>
+
+      <div id="questions-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- VIEW 6: NOTICES -->
+    <section id="view-announcements" class="view-section hidden space-y-6">
+      <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex justify-between items-center">
+        <div>
+          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <i class="fa-solid fa-bullhorn text-amber-500"></i> College Announcements & Notices
+          </h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Official updates regarding exams and classes</p>
+        </div>
+      </div>
+
+      <div id="notices-list" class="space-y-4">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MOBILE BOTTOM NAVIGATION -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 flex items-center justify-around py-2 px-1 text-[10px] font-bold text-slate-600 dark:text-slate-400 shadow-lg">
+    <button onclick="switchView('home')" id="mob-nav-home" class="flex flex-col items-center justify-center p-1 text-blue-600 dark:text-blue-400">
+      <i class="fa-solid fa-house text-base mb-0.5 text-sky-400"></i>
+      <span>Home</span>
+    </button>
+    <button onclick="switchView('routine')" id="mob-nav-routine" class="flex flex-col items-center justify-center p-1">
+      <i class="fa-solid fa-calendar-days text-base mb-0.5 text-teal-400"></i>
+      <span>Routine</span>
+    </button>
+    <button onclick="switchView('announcements')" id="mob-nav-announcements" class="flex flex-col items-center justify-center p-1">
+      <i class="fa-solid fa-bullhorn text-base mb-0.5 text-amber-400"></i>
+      <span>Notices</span>
+    </button>
+    <button onclick="switchView('notes')" id="mob-nav-notes" class="flex flex-col items-center justify-center p-1">
+      <i class="fa-solid fa-book-open text-base mb-0.5 text-emerald-400"></i>
+      <span>Notes</span>
+    </button>
+    <button onclick="switchView('questions')" id="mob-nav-questions" class="flex flex-col items-center justify-center p-1">
+      <i class="fa-solid fa-photo-film text-base mb-0.5 text-purple-400"></i>
+      <span>Vault</span>
+    </button>
+  </nav>
+
+  <!-- BUILT-IN PDF READER MODAL -->
+  <div id="pdf-modal" class="fixed inset-0 z-50 hidden bg-slate-950/95 backdrop-blur-md flex flex-col select-none overflow-hidden">
+    <div class="flex items-center justify-between px-4 py-3 bg-slate-900 border-b border-slate-800 text-white shrink-0 z-20">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm font-bold">
+          <i class="fa-solid fa-file-pdf"></i>
+        </div>
+        <div>
+          <h3 id="pdf-modal-title" class="text-xs sm:text-sm font-bold truncate max-w-xs sm:max-w-md">Document Viewer</h3>
+          <span class="text-[10px] text-slate-400 block leading-none">Built-in PDF Reader</span>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2">
+        <a id="pdf-download-btn" href="#" target="_blank" class="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-xs font-bold text-white transition-colors flex items-center gap-1.5">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> <span class="hidden sm:inline">Open Drive</span>
+        </a>
+        <button onclick="closePdfModal()" class="px-3 py-1.5 rounded-xl bg-red-600/80 hover:bg-red-600 text-xs font-bold text-white transition-colors">
+          <i class="fa-solid fa-xmark"></i> Close
+        </button>
+      </div>
+    </div>
+
+    <div class="flex-grow w-full h-full bg-slate-900 relative">
+      <iframe id="pdf-frame" class="w-full h-full border-0" src="" allow="autoplay"></iframe>
+    </div>
+  </div>
+
+  <!-- QUESTION FULLSCREEN MODAL -->
+  <div id="question-modal" class="fixed inset-0 z-50 hidden bg-slate-950/95 backdrop-blur-md flex flex-col select-none overflow-hidden" role="dialog" aria-label="Question Preview Modal" aria-modal="true">
+    <div class="flex items-center justify-between px-4 py-3 bg-slate-900/90 border-b border-slate-800 text-white shrink-0 z-20">
+      <div class="flex items-center space-x-2">
+        <i class="fa-solid fa-file-pdf text-purple-400" aria-hidden="true"></i>
+        <h3 id="qmodal-title" class="text-xs sm:text-sm font-bold truncate max-w-xs sm:max-w-md">Question Preview</h3>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span class="text-[10px] text-slate-400 hidden md:inline">Use Scroll / Double Tap to Zoom</span>
+        <button onclick="closeQuestionModal()" class="px-3 py-1.5 rounded-xl bg-red-600/80 hover:bg-red-600 text-xs font-bold text-white transition-colors" aria-label="Close Preview">
+          <i class="fa-solid fa-xmark"></i> Close
+        </button>
+      </div>
+    </div>
+
+    <div id="qmodal-viewport" class="flex-grow relative overflow-hidden flex items-center justify-center cursor-grab active:cursor-grabbing">
+      <div id="qmodal-image-wrapper" class="absolute transition-transform duration-75 ease-out origin-center flex items-center justify-center">
+        <img id="qmodal-img" src="" alt="Question Preview Document" class="max-w-[90vw] max-h-[80vh] object-contain shadow-2xl rounded-lg pointer-events-none">
+      </div>
+    </div>
+
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 sm:gap-2 px-3 py-2 rounded-2xl bg-slate-900/85 backdrop-blur-xl border border-slate-700/80 shadow-2xl text-white">
+      <button onclick="zoomQuestionImage(1.25)" class="p-2.5 sm:px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 transition-all flex items-center gap-1" title="Zoom In (+)" aria-label="Zoom In">
+        <i class="fa-solid fa-magnifying-glass-plus"></i> <span class="hidden sm:inline">In</span>
+      </button>
+      <button onclick="zoomQuestionImage(0.8)" class="p-2.5 sm:px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 transition-all flex items-center gap-1" title="Zoom Out (-)" aria-label="Zoom Out">
+        <i class="fa-solid fa-magnifying-glass-minus"></i> <span class="hidden sm:inline">Out</span>
+      </button>
+      <button onclick="rotateQuestionImage(90)" class="p-2.5 sm:px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 transition-all flex items-center gap-1" title="Rotate (R)" aria-label="Rotate Image">
+        <i class="fa-solid fa-rotate-right"></i> <span class="hidden sm:inline">Rotate</span>
+      </button>
+      <button onclick="resetQuestionImage()" class="p-2.5 sm:px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-200 transition-all flex items-center gap-1" title="Reset View" aria-label="Reset Zoom and Rotation">
+        <i class="fa-solid fa-arrows-to-dot"></i> <span class="hidden sm:inline">Reset</span>
+      </button>
+      <div class="h-6 w-[1px] bg-slate-700 mx-0.5"></div>
+      <a id="qmodal-download-btn" href="#" target="_blank" class="px-3.5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-xs font-bold text-white flex items-center gap-1.5 transition-all">
+        <i class="fa-solid fa-download"></i> <span>Open Original</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- NOTICE MODAL -->
+  <div id="notice-modal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-2xl w-full p-6 space-y-4 shadow-2xl overflow-y-auto max-h-[90vh]">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+        <h3 id="notice-modal-title" class="text-lg font-bold text-slate-900 dark:text-white">Notice Title</h3>
+        <button onclick="closeNoticeModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div id="notice-modal-content" class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed space-y-3 prose dark:prose-invert max-w-none">
+      </div>
+      <div class="pt-3 border-t border-slate-200 dark:border-slate-800 flex justify-end">
+        <button onclick="closeNoticeModal()" class="px-4 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 font-bold text-xs">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="mt-auto border-t border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900 py-6 text-center text-xs text-slate-500 dark:text-slate-400">
+    <div class="max-w-7xl mx-auto px-4 space-y-1">
+      <p class="font-semibold">© 2026 KSC HSC 2K27 Portal. All rights reserved.</p>
+      <p>Designed & Developed by <a href="https://www.facebook.com/pixelatedlevel/" target="_blank" class="text-blue-600 dark:text-blue-400 font-bold hover:underline">Md. Ashiqul Islam Ashik</a></p>
+    </div>
+  </footer>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    // DATA DECLARATIONS
+    const notesData = [
+      {
+        id: 1,
+        title: "ICT Chapter 3 Full Note",
+        subject: "ICT",
+        paper: "Both (1st & 2nd)",
+        description: "Complete note on Chapter 3 covering Number Systems and Digital Devices.",
+        url: "https://drive.google.com/file/d/13zzP1eIkkPOLwD1WhhGHiVTZdfCIT7ha/view?usp=drive_link"
+      }
+    ];
+
+    const scienceRoutine = [
+      { day: "Sunday", p1: "English", p2: "Chemistry", p3: "-", p4: "-", p5: "-", p6: "-" },
+      { day: "Monday", p1: "English", p2: "Higher Math", p3: "-", p4: "-", p5: "-", p6: "-" },
+      { day: "Tuesday", p1: "Bangla", p2: "Higher Math", p3: "-", p4: "-", p5: "-", p6: "-" },
+      { day: "Wednesday", p1: "ICT", p2: "English", p3: "-", p4: "-", p5: "-", p6: "-" },
+      { day: "Thursday", p1: "Bangla", p2: "Physics", p3: "-", p4: "-", p5: "-", p6: "-" }
+    ];
+
+    const businessRoutine = [
+      { day: "Sunday", p1: "English", p2: "Marketing / Social Work", p3: "-", p4: "-", p5: "-", p6: "-" },
+      { day: "Monday", p1: "English", p2: "Agri (A+B)", p3: "-", p4: "-", p5: "-", p6: "-" },
+      { day: "Tuesday", p1: "Bangla", p2: "Management / Social Work", p3: "-", p4: "-", p5: "-", p6: "-" },
+      { day: "Wednesday", p1: "ICT", p2: "English", p3: "-", p4: "-", p5: "-", p6: "-" },
+      { day: "Thursday", p1: "Bangla", p2: "Agri (A+B)", p3: "-", p4: "-", p5: "-", p6: "-" }
+    ];
+
+    const humanitiesRoutine = [
+      { day: "Sunday", p1: "English", p2: "Social Work", p3: "-", p4: "-", p5: "-", p6: "-" },
+      { day: "Monday", p1: "English", p2: "Agri (A+B)", p3: "-", p4: "-", p5: "-", p6: "-" },
+      { day: "Tuesday", p1: "Bangla", p2: "Social Work", p3: "-", p4: "-", p5: "-", p6: "-" },
+      { day: "Wednesday", p1: "ICT", p2: "English", p3: "-", p4: "-", p5: "-", p6: "-" },
+      { day: "Thursday", p1: "Bangla", p2: "Agri (A+B)", p3: "-", p4: "-", p5: "-", p6: "-" }
+    ];
+
+    const questionItems = [
+      {
+        id: 1,
+        title: "Class Routine Schedule Photo",
+        subject: "Routine Photo",
+        date: "2026",
+        url: "https://drive.google.com/file/d/1GjAZ6mWZtR89M6H1sHnXBcbPTewxrH2i/view?usp=drive_link"
+      }
+    ];
+
+    const announcementItems = [
+      {
+        id: 1,
+        title: "Pre-Test Examination Target Announced",
+        category: "Exam",
+        date: "November 26, 2026",
+        content: "The exam date for the Pre-Test Examination has been officially revealed. Exams will commence on **November 26, 2026**. Detailed routine and subject syllabus will be updated soon."
+      }
+    ];
+
+    let currentScale = 1;
+    let currentRotation = 0;
+    let panX = 0;
+    let panY = 0;
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let touchDistStart = 0;
+    let lastTapTime = 0;
+
+    // THEME & VIEW MANAGEMENT
+    function initTheme() {
+      const isDark = localStorage.getItem('theme') === 'dark' || 
+        (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+
+    function switchView(viewId) {
+      document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+      const activeView = document.getElementById('view-' + viewId);
+      if (activeView) activeView.classList.remove('hidden');
+
+      // Update Nav Buttons
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+      const navBtn = document.getElementById('nav-' + viewId);
+      if (navBtn) navBtn.classList.add('active');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // RENDER FUNCTIONS
+    function filterNotes(subject) {
+      document.querySelectorAll('.note-filter-btn').forEach(btn => {
+        btn.className = 'note-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300';
+      });
+      const activeBtn = document.getElementById('filter-subject-' + subject);
+      if (activeBtn) activeBtn.className = 'note-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-600 text-white';
+
+      renderNotes(subject, 'all');
+    }
+
+    function filterNotesPaper(paper) {
+      renderNotes('all', paper);
+    }
+
+    function renderNotes(subjectFilter = 'all', paperFilter = 'all') {
+      const container = document.getElementById('notes-grid');
+      if (!container) return;
+
+      const filtered = notesData.filter(item => {
+        const matchSubject = subjectFilter === 'all' || item.subject === subjectFilter;
+        const matchPaper = paperFilter === 'all' || item.paper.includes(paperFilter) || item.paper.includes('Both');
+        return matchSubject && matchPaper;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full text-center py-12 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 text-slate-400">
+            <i class="fa-solid fa-folder-open text-3xl mb-2"></i>
+            <p class="text-xs font-medium">No notes available for this selection.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => `
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm hover:shadow-md transition-all space-y-4 flex flex-col justify-between">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300">
+                ${item.subject}
+              </span>
+              <span class="text-[10px] text-slate-400 font-bold">${item.paper}</span>
+            </div>
+            <h3 class="text-sm font-bold text-slate-900 dark:text-white leading-snug">${item.title}</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">${item.description}</p>
+          </div>
+
+          <button onclick="openPdfModal('${item.title}', '${item.url}')" class="w-full py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors flex items-center justify-center gap-2">
+            <i class="fa-solid fa-file-pdf"></i> Read Note in Reader
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function renderQuestions() {
+      const container = document.getElementById('questions-grid');
+      if (!container) return;
+
+      if (questionItems.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full text-center py-12 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 text-slate-400">
+            <i class="fa-solid fa-folder-open text-3xl mb-2"></i>
+            <p class="text-xs font-medium">No resources or photos in the vault yet.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = questionItems.map(item => {
+        const fileIdMatch = item.url.match(/\/d\/([^\/]+)/);
+        const thumbUrl = (fileIdMatch && fileIdMatch[1])
+          ? `https://drive.google.com/thumbnail?id=${fileIdMatch[1]}&sz=w600`
+          : item.url;
+
+        return `
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-4 shadow-sm hover:shadow-md transition-all space-y-3 flex flex-col justify-between group">
+            <div class="space-y-2">
+              <div class="relative w-full h-36 bg-slate-100 dark:bg-slate-800 rounded-2xl overflow-hidden cursor-pointer" onclick="openQuestionModal('${item.title}', '${item.url}')">
+                <img src="${thumbUrl}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.src='https://placehold.co/600x400/1e293b/ffffff?text=Document+Preview';">
+                <div class="absolute inset-0 bg-slate-950/20 group-hover:bg-slate-950/40 transition-colors flex items-center justify-center">
+                  <span class="w-9 h-9 rounded-full bg-white/90 dark:bg-slate-900/90 text-purple-600 dark:text-purple-400 flex items-center justify-center shadow-lg text-sm">
+                    <i class="fa-solid fa-expand"></i>
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between pt-1">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300">
+                  ${item.subject}
+                </span>
+                <span class="text-[10px] text-slate-400 font-bold">${item.date}</span>
+              </div>
+              <h3 class="text-xs font-bold text-slate-900 dark:text-white leading-snug">${item.title}</h3>
+            </div>
+
+            <button onclick="openQuestionModal('${item.title}', '${item.url}')" class="w-full py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition-colors flex items-center justify-center gap-2">
+              <i class="fa-solid fa-eye"></i> Full Screen Preview
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function switchRoutineGroup(group) {
+      ['science', 'business', 'humanities', 'exam'].forEach(g => {
+        const btn = document.getElementById('grp-btn-' + g);
+        if (btn) {
+          if (g === group) {
+            btn.className = 'px-3.5 py-2 rounded-xl text-xs font-bold transition-all bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm';
+          } else {
+            btn.className = 'px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-400';
+          }
+        }
+      });
+      renderClassRoutine(group);
+    }
+
+    function renderClassRoutine(group) {
+      const container = document.getElementById('routine-container');
+      if (!container) return;
+
+      if (group === 'exam') {
+        container.innerHTML = `
+          <div class="p-8 text-center bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-3">
+            <div class="w-12 h-12 mx-auto rounded-2xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl font-bold">
+              <i class="fa-solid fa-clock"></i>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">Exam Routine Coming Soon</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">The Pre-Test exam routine for November 26, 2026 will be published here as soon as official dates are finalized.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let routineList = scienceRoutine;
+      if (group === 'business') routineList = businessRoutine;
+      if (group === 'humanities') routineList = humanitiesRoutine;
+
+      container.innerHTML = `
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+            <h3 class="text-base font-black text-slate-900 dark:text-white flex items-center gap-2 capitalize">
+              <i class="fa-solid fa-calendar-week text-teal-500"></i> ${group} Weekly Timetable
+            </h3>
+            <span class="text-xs font-bold text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/60 px-3 py-1 rounded-full border border-teal-200 dark:border-teal-800">
+              6 Periods / Day
+            </span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse min-w-[650px]">
+              <thead>
+                <tr class="border-b border-slate-200 dark:border-slate-800 text-[11px] font-extrabold uppercase text-slate-400 dark:text-slate-500">
+                  <th class="py-3 px-3 w-28">Day</th>
+                  <th class="py-3 px-2 text-center">
+                    <div>Period 1</div>
+                    <div class="text-[9px] font-normal tracking-normal text-slate-400 dark:text-slate-500 lowercase mt-0.5">10:00 - 10:40</div>
+                  </th>
+                  <th class="py-3 px-2 text-center">
+                    <div>Period 2</div>
+                    <div class="text-[9px] font-normal tracking-normal text-slate-400 dark:text-slate-500 lowercase mt-0.5">10:40 - 11:20</div>
+                  </th>
+                  <th class="py-3 px-2 text-center">
+                    <div>Period 3</div>
+                    <div class="text-[9px] font-normal tracking-normal text-slate-400 dark:text-slate-500 lowercase mt-0.5">11:20 - 12:00</div>
+                  </th>
+                  <th class="py-3 px-2 text-center">
+                    <div>Period 4</div>
+                    <div class="text-[9px] font-normal tracking-normal text-slate-400 dark:text-slate-500 lowercase mt-0.5">12:00 - 12:40</div>
+                  </th>
+                  <th class="py-3 px-2 text-center bg-amber-500/10 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-lg">
+                    <div>Break</div>
+                    <div class="text-[9px] font-semibold tracking-normal lowercase mt-0.5">12:40 - 1:00</div>
+                  </th>
+                  <th class="py-3 px-2 text-center">
+                    <div>Period 5</div>
+                    <div class="text-[9px] font-normal tracking-normal text-slate-400 dark:text-slate-500 lowercase mt-0.5">1:00 - 1:40</div>
+                  </th>
+                  <th class="py-3 px-2 text-center">
+                    <div>Period 6</div>
+                    <div class="text-[9px] font-normal tracking-normal text-slate-400 dark:text-slate-500 lowercase mt-0.5">1:40 - 2:20</div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs">
+                ${routineList.map(r => `
+                  <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
+                    <td class="py-3.5 px-3 font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+                      <span class="w-2 h-2 rounded-full bg-teal-500"></span>
+                      ${r.day}
+                    </td>
+                    ${[r.p1, r.p2, r.p3, r.p4].map(p => {
+                      const isFree = p.includes('[Study') || p.includes('Free');
+                      return `
+                        <td class="py-3.5 px-2 text-center font-bold ${isFree ? 'text-slate-400 dark:text-slate-600 italic' : 'text-blue-600 dark:text-blue-400'}">
+                          ${p}
+                        </td>
+                      `;
+                    }).join('')}
+                    
+                    <!-- Break / Tiffin Column -->
+                    <td class="py-3.5 px-2 text-center font-extrabold text-amber-600 dark:text-amber-400 bg-amber-500/5 dark:bg-amber-500/5">
+                      <span class="px-2 py-0.5 rounded-full text-[10px] bg-amber-500/15 border border-amber-500/20">
+                        <i class="fa-solid fa-utensils text-[9px] mr-1"></i>Tiffin
+                      </span>
+                    </td>
+
+                    ${[r.p5, r.p6].map(p => {
+                      const isFree = p.includes('[Study') || p.includes('Free');
+                      return `
+                        <td class="py-3.5 px-2 text-center font-bold ${isFree ? 'text-slate-400 dark:text-slate-600 italic' : 'text-blue-600 dark:text-blue-400'}">
+                          ${p}
+                        </td>
+                      `;
+                    }).join('')}
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderNotices() {
+      const container = document.getElementById('notices-list');
+      if (!container) return;
+
+      container.innerHTML = announcementItems.map(item => `
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300">
+              ${item.category}
+            </span>
+            <span class="text-[10px] text-slate-400 font-bold">${item.date}</span>
+          </div>
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white">${item.title}</h3>
+          <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">${item.content}</p>
+        </div>
+      `).join('');
+    }
+
+    // MODALS & PREVIEWS
+    function openPdfModal(title, url) {
+      document.getElementById('pdf-modal-title').innerText = title;
+      const embedUrl = url.replace('/view?usp=drive_link', '/preview').replace('/view', '/preview');
+      document.getElementById('pdf-frame').src = embedUrl;
+      document.getElementById('pdf-download-btn').href = url;
+      document.getElementById('pdf-modal').classList.remove('hidden');
+    }
+
+    function closePdfModal() {
+      document.getElementById('pdf-modal').classList.add('hidden');
+      document.getElementById('pdf-frame').src = '';
+    }
+
+    function openQuestionModal(title, url) {
+      document.getElementById('qmodal-title').innerText = title;
+      document.getElementById('qmodal-download-btn').href = url;
+      
+      const img = document.getElementById('qmodal-img');
+      const fileIdMatch = url.match(/\/d\/([^\/]+)/);
+      if (fileIdMatch && fileIdMatch[1]) {
+        img.src = `https://drive.google.com/thumbnail?id=${fileIdMatch[1]}&sz=w1200`;
+      } else {
+        img.src = url;
+      }
+
+      resetQuestionImage();
+      document.getElementById('question-modal').classList.remove('hidden');
+    }
+
+    function closeQuestionModal() {
+      document.getElementById('question-modal').classList.add('hidden');
+    }
+
+    function closeNoticeModal() {
+      document.getElementById('notice-modal').classList.add('hidden');
+    }
+
+    function zoomQuestionImage(factor) {
+      currentScale = Math.min(Math.max(0.5, currentScale * factor), 5);
+      updateImageTransform();
+    }
+
+    function rotateQuestionImage(deg) {
+      currentRotation = (currentRotation + deg) % 360;
+      updateImageTransform();
+    }
+
+    function resetQuestionImage() {
+      currentScale = 1;
+      currentRotation = 0;
+      panX = 0;
+      panY = 0;
+      updateImageTransform();
+    }
+
+    function updateImageTransform() {
+      const wrapper = document.getElementById('qmodal-image-wrapper');
+      if (wrapper) {
+        wrapper.style.transform = `translate(${panX}px, ${panY}px) scale(${currentScale}) rotate(${currentRotation}deg)`;
+      }
+    }
+
+    // COUNTDOWN & UTILITIES
+    function startExamCountdown() {
+      const examDate = new Date("2026-11-26T00:00:00").getTime();
+      
+      function updateTimer() {
+        const now = new Date().getTime();
+        const diff = examDate - now;
+
+        if (diff <= 0) {
+          const cdText = document.getElementById('cd-text');
+          if (cdText) cdText.innerText = "Exam Ongoing!";
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.querySelectorAll('#cd-days').forEach(el => el.innerText = String(days).padStart(2, '0'));
+        document.querySelectorAll('#cd-hours').forEach(el => el.innerText = String(hours).padStart(2, '0'));
+        document.querySelectorAll('#cd-mins').forEach(el => el.innerText = String(mins).padStart(2, '0'));
+        document.querySelectorAll('#cd-secs').forEach(el => el.innerText = String(secs).padStart(2, '0'));
+      }
+
+      updateTimer();
+      setInterval(updateTimer, 1000);
+    }
+
+    function setupOfflineListener() {
+      const banner = document.getElementById('offline-banner');
+      function checkStatus() {
+        if (!navigator.onLine) {
+          if (banner) banner.classList.remove('hidden');
+        } else {
+          if (banner) banner.classList.add('hidden');
+        }
+      }
+      window.addEventListener('online', checkStatus);
+      window.addEventListener('offline', checkStatus);
+      checkStatus();
+    }
+
+    // LOCAL STORAGE CACHING FOR OFFLINE ACCESS
+    function cacheDataLocally() {
+      try {
+        localStorage.setItem('ksc_notes_cache', JSON.stringify(notesData));
+        localStorage.setItem('ksc_routine_science', JSON.stringify(scienceRoutine));
+        localStorage.setItem('ksc_questions_cache', JSON.stringify(questionItems));
+      } catch (e) {
+        console.log('LocalStorage caching fallback active');
+      }
+    }
+
+    function dismissAnnouncementBar() {
+      const bar = document.getElementById('announcement-bar');
+      if (bar) bar.classList.add('hidden');
+    }
+
+    function setupAccessibilityShortcuts() {
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeQuestionModal();
+          closePdfModal();
+          closeNoticeModal();
+        }
+        const qModal = document.getElementById('question-modal');
+        if (qModal && !qModal.classList.contains('hidden')) {
+          if (e.key === '+' || e.key === '=') zoomQuestionImage(1.2);
+          if (e.key === '-') zoomQuestionImage(0.8);
+          if (e.key === 'r' || e.key === 'R') rotateQuestionImage(90);
+        }
+      });
+    }
+
+    function setupQuestionModalGestures() {
+      const viewport = document.getElementById('qmodal-viewport');
+      if (!viewport) return;
+
+      viewport.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX - panX;
+        startY = e.clientY - panY;
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        panX = e.clientX - startX;
+        panY = e.clientY - startY;
+        updateImageTransform();
+      });
+
+      window.addEventListener('mouseup', () => { isDragging = false; });
+
+      // TOUCH & PINCH TO ZOOM GESTURES
+      viewport.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          const currentTime = new Date().getTime();
+          const tapLength = currentTime - lastTapTime;
+          if (tapLength < 300 && tapLength > 0) {
+            currentScale = currentScale === 1 ? 2.2 : 1;
+            panX = 0;
+            panY = 0;
+            updateImageTransform();
+          }
+          lastTapTime = currentTime;
+
+          isDragging = true;
+          startX = e.touches[0].clientX - panX;
+          startY = e.touches[0].clientY - panY;
+        } else if (e.touches.length === 2) {
+          isDragging = false;
+          touchDistStart = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+        }
+      });
+
+      viewport.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 1 && isDragging) {
+          panX = e.touches[0].clientX - startX;
+          panY = e.touches[0].clientY - startY;
+          updateImageTransform();
+        } else if (e.touches.length === 2) {
+          const dist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          if (touchDistStart > 0) {
+            const factor = dist / touchDistStart;
+            currentScale = Math.min(Math.max(0.5, currentScale * factor), 5);
+            updateImageTransform();
+          }
+          touchDistStart = dist;
+        }
+      });
+
+      viewport.addEventListener('touchend', () => {
+        isDragging = false;
+        touchDistStart = 0;
+      });
+
+      viewport.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const factor = e.deltaY < 0 ? 1.15 : 0.85;
+        zoomQuestionImage(factor);
+      }, { passive: false });
+    }
+
+    // INITIALIZATION
+    function initializePortal() {
+      initTheme();
+      cacheDataLocally();
+      renderNotes('all');
+      renderClassRoutine('science');
+      renderQuestions();
+      renderNotices();
+      startExamCountdown();
+      setupOfflineListener();
+      setupQuestionModalGestures();
+      setupAccessibilityShortcuts();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initializePortal);
+    } else {
+      initializePortal();
+    }
+  </script>
+</body>
+</html>
