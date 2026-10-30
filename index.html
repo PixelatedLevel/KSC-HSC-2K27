@@ -192,31 +192,39 @@
             <i class="fa-solid fa-house text-base mb-1 text-sky-400"></i>
             <span>Home</span>
           </button>
+
           <button onclick="switchView('routine')" id="nav-routine" class="nav-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
             <i class="fa-solid fa-calendar-days text-base mb-1 text-teal-400"></i>
             <span>Class Routine</span>
           </button>
-          <button onclick="switchView('formulas')" id="nav-formulas" class="nav-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
-            <i class="fa-solid fa-square-root-variable text-base mb-1 text-indigo-400"></i>
-            <span>Formulas</span>
-          </button>
-          <button onclick="switchView('announcements')" id="nav-announcements" class="nav-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
-            <i class="fa-solid fa-bullhorn text-base mb-1 text-amber-400"></i>
-            <span>Notices</span>
-          </button>
+
           <button onclick="switchView('notes')" id="nav-notes" class="nav-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
             <i class="fa-solid fa-book-open text-base mb-1 text-emerald-400"></i>
             <span>Notes</span>
           </button>
-          <button onclick="switchView('questions')" id="nav-questions" class="nav-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
-            <i class="fa-solid fa-photo-film text-base mb-1 text-purple-400"></i>
-            <span>Resource Vault</span>
+
+          <button onclick="switchView('announcements')" id="nav-announcements" class="nav-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
+            <i class="fa-solid fa-bullhorn text-base mb-1 text-amber-400"></i>
+            <span>Notices</span>
           </button>
 
-          <!-- Rotate Screen Orientation Toggle Button -->
-          <button onclick="toggleOrientationLock()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors ml-2 shadow-inner" title="Toggle Orientation Lock / Landscape Mode">
-            <i id="rotate-toggle-icon" class="fa-solid fa-mobile-screen-button text-base text-indigo-500"></i>
-          </button>
+          <!-- Extra Expandable Dropdown -->
+          <div class="relative group">
+            <button id="nav-extra" class="nav-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
+              <i class="fa-solid fa-ellipsis text-base mb-1 text-indigo-400"></i>
+              <span class="flex items-center gap-1">Extra <i class="fa-solid fa-chevron-down text-[9px]"></i></span>
+            </button>
+
+            <!-- Dropdown Menu Card -->
+            <div class="absolute right-0 top-full mt-1 w-52 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl py-2 hidden group-hover:block group-focus-within:block z-50">
+              <button onclick="switchView('formulas')" class="w-full px-4 py-2.5 text-left text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2.5">
+                <i class="fa-solid fa-square-root-variable text-indigo-500 w-4"></i> Formulas
+              </button>
+              <button onclick="switchView('questions')" class="w-full px-4 py-2.5 text-left text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2.5">
+                <i class="fa-solid fa-photo-film text-purple-500 w-4"></i> Resource Vault
+              </button>
+            </div>
+          </div>
 
           <!-- Theme Switcher -->
           <button onclick="toggleTheme()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors shadow-inner" title="Toggle Dark/Light Mode">
@@ -226,9 +234,6 @@
 
         <!-- Mobile Header Controls -->
         <div class="flex items-center space-x-2 md:hidden">
-          <button onclick="toggleOrientationLock()" class="p-2 rounded-xl bg-slate-100/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 active:scale-95 transition-transform" title="Toggle Orientation Mode">
-            <i id="rotate-toggle-icon-mobile" class="fa-solid fa-mobile-screen-button text-sm text-indigo-500"></i>
-          </button>
           <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-100/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 active:scale-95 transition-transform" title="Toggle Dark/Light Theme">
             <i id="theme-toggle-icon-mobile" class="fa-solid fa-moon text-sm text-amber-400"></i>
           </button>
@@ -598,22 +603,32 @@
         <i class="fa-solid fa-calendar-days text-lg mb-0.5 text-teal-500 dark:text-teal-400"></i>
         <span>Routine</span>
       </button>
-      <button onclick="switchView('formulas')" id="mob-nav-formulas" class="mob-nav-btn flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all active:scale-90">
-        <i class="fa-solid fa-square-root-variable text-lg mb-0.5 text-indigo-500 dark:text-indigo-400"></i>
-        <span>Formulas</span>
+      <button onclick="switchView('notes')" id="mob-nav-notes" class="mob-nav-btn flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all active:scale-90">
+        <i class="fa-solid fa-book-open text-lg mb-0.5 text-emerald-500 dark:text-emerald-400"></i>
+        <span>Notes</span>
       </button>
       <button onclick="switchView('announcements')" id="mob-nav-announcements" class="mob-nav-btn flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all active:scale-90">
         <i class="fa-solid fa-bullhorn text-lg mb-0.5 text-amber-500 dark:text-amber-400"></i>
         <span>Notices</span>
       </button>
-      <button onclick="switchView('notes')" id="mob-nav-notes" class="mob-nav-btn flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all active:scale-90">
-        <i class="fa-solid fa-book-open text-lg mb-0.5 text-emerald-500 dark:text-emerald-400"></i>
-        <span>Notes</span>
-      </button>
-      <button onclick="switchView('questions')" id="mob-nav-questions" class="mob-nav-btn flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all active:scale-90">
-        <i class="fa-solid fa-photo-film text-lg mb-0.5 text-purple-500 dark:text-purple-400"></i>
-        <span>Vault</span>
-      </button>
+
+      <!-- Extra Mobile Popover Sheet -->
+      <div class="relative">
+        <button onclick="toggleMobileExtraMenu()" id="mob-nav-extra" class="mob-nav-btn flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all active:scale-90">
+          <i class="fa-solid fa-ellipsis text-lg mb-0.5 text-indigo-500 dark:text-indigo-400"></i>
+          <span>Extra</span>
+        </button>
+
+        <!-- Mobile Extra Menu Sheet -->
+        <div id="mob-extra-sheet" class="hidden absolute right-0 bottom-14 w-44 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl py-2 z-50">
+          <button onclick="switchView('formulas'); toggleMobileExtraMenu();" class="w-full px-3.5 py-2 text-left text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-square-root-variable text-indigo-500 w-4"></i> Formulas
+          </button>
+          <button onclick="switchView('questions'); toggleMobileExtraMenu();" class="w-full px-3.5 py-2 text-left text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-photo-film text-purple-500 w-4"></i> Resource Vault
+          </button>
+        </div>
+      </div>
     </nav>
   </div>
 
@@ -1346,7 +1361,18 @@
       const activeMobNav = document.getElementById('mob-nav-' + viewName);
       if (activeMobNav) activeMobNav.classList.add('active');
 
+      // Highlight Extra tab if opening formulas, questions or AI workspaces
+      if (['formulas', 'questions', 'notebooklm'].includes(viewName)) {
+        document.getElementById('nav-extra')?.classList.add('active');
+        document.getElementById('mob-nav-extra')?.classList.add('active');
+      }
+
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleMobileExtraMenu() {
+      const sheet = document.getElementById('mob-extra-sheet');
+      if (sheet) sheet.classList.toggle('hidden');
     }
 
     // ORIENTATION TOGGLE
