@@ -45,14 +45,14 @@
     }
     
     .glass-header {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
     }
     .dark .glass-header {
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
     }
 
     ::-webkit-scrollbar {
@@ -70,107 +70,149 @@
       background: #334155;
     }
 
+    /* Modern Card Ambient Glow & Elevate Effects */
+    .card-elevate {
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .card-elevate:hover {
+      transform: translateY(-3px);
+    }
+
     /* Active Navigation Style */
     .nav-btn.active {
-      background-color: #2563eb;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
       color: #ffffff !important;
-      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+      box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
     }
     .nav-btn.active:hover {
-      background-color: #1d4ed8;
+      background: linear-gradient(135deg, #1d4ed8, #1e40af);
       color: #ffffff !important;
     }
     .nav-btn.active i {
       color: #ffffff !important;
+    }
+
+    /* Mobile Floating Dock Active State */
+    .mob-nav-btn.active {
+      color: #2563eb !important;
+      position: relative;
+    }
+    .dark .mob-nav-btn.active {
+      color: #60a5fa !important;
+    }
+    .mob-nav-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 16px;
+      height: 3px;
+      background: #2563eb;
+      border-radius: 9999px;
+      box-shadow: 0 0 8px #2563eb;
+    }
+    .dark .mob-nav-btn.active::after {
+      background: #60a5fa;
+      box-shadow: 0 0 8px #60a5fa;
     }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 min-h-screen flex flex-col selection:bg-blue-500 selection:text-white">
 
   <!-- Offline Banner -->
-  <div id="offline-banner" class="hidden bg-amber-500 text-slate-950 px-4 py-2 text-xs font-bold text-center flex items-center justify-center gap-2 sticky top-0 z-50 shadow-md" role="alert">
+  <div id="offline-banner" class="hidden bg-amber-500 text-slate-950 px-4 py-1.5 text-[11px] font-bold text-center flex items-center justify-center gap-2 sticky top-0 z-50 shadow-md" role="alert">
     <i class="fa-solid fa-wifi font-bold animate-pulse" aria-hidden="true"></i>
     <span>Offline Mode Active. Cached content & documents available.</span>
   </div>
 
   <!-- Dynamic Announcement & Exam Countdown Bar -->
-  <div id="announcement-bar" class="bg-gradient-to-r from-indigo-700 via-blue-700 to-purple-800 text-white px-4 py-2.5 shadow-md relative z-30 transition-all border-b border-white/10" role="region" aria-label="Important Announcement">
-    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs">
+  <div id="announcement-bar" class="bg-gradient-to-r from-indigo-800 via-blue-700 to-purple-900 text-white px-3 py-2 sm:px-4 sm:py-2.5 shadow-lg relative z-30 transition-all border-b border-white/10" role="region" aria-label="Important Announcement">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-1.5 text-xs">
       <div class="flex items-center space-x-2 font-medium">
-        <span class="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-400 text-slate-950 flex items-center gap-1">
+        <span class="px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-black uppercase bg-amber-400 text-slate-950 flex items-center gap-1 shadow-sm shrink-0">
           <i class="fa-solid fa-triangle-exclamation"></i> Notice
         </span>
-        <span id="announcement-msg" class="font-bold">Pre-Test Exam Starts Nov 26, 2026!</span>
+        <span id="announcement-msg" class="font-bold tracking-tight text-[11px] sm:text-xs truncate max-w-[200px] sm:max-w-none">Pre-Test Exam Starts Nov 26, 2026!</span>
       </div>
       
       <!-- Compact Live Countdown -->
-      <div class="flex items-center space-x-3">
-        <div id="countdown-timer" class="flex items-center space-x-1.5 font-mono text-[11px] bg-black/30 backdrop-blur-md px-3 py-1 rounded-xl border border-white/10">
-          <span class="text-amber-300 font-bold" id="cd-text">Starts in:</span>
+      <div class="flex items-center space-x-2 sm:space-x-3 ml-auto sm:ml-0">
+        <div id="countdown-timer" class="flex items-center space-x-1 font-mono text-[10px] sm:text-[11px] bg-black/40 backdrop-blur-md px-2.5 py-1 rounded-xl border border-white/15 shadow-inner">
+          <span class="text-amber-300 font-bold hidden xs:inline" id="cd-text">Starts in:</span>
           <span id="cd-days" class="font-bold">00</span>d :
           <span id="cd-hours" class="font-bold">00</span>h :
           <span id="cd-mins" class="font-bold">00</span>m :
-          <span id="cd-secs" class="font-bold text-amber-300">00</span>s
+          <span id="cd-secs" class="font-bold text-amber-300 animate-pulse">00</span>s
         </div>
-        <button onclick="dismissAnnouncementBar()" class="text-white/80 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors" aria-label="Close Announcement Bar">
-          <i class="fa-solid fa-xmark text-sm"></i>
+        <button onclick="dismissAnnouncementBar()" class="text-white/70 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors" aria-label="Close Announcement Bar">
+          <i class="fa-solid fa-xmark text-xs sm:text-sm"></i>
         </button>
       </div>
     </div>
   </div>
 
   <!-- HEADER -->
-  <header class="sticky top-0 z-40 w-full glass-header border-b border-slate-200/80 dark:border-slate-800/80 transition-all">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-20">
+  <header class="sticky top-0 z-40 w-full glass-header border-b border-slate-200/80 dark:border-slate-800/80 transition-all shadow-sm">
+    <div class="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-20">
         
         <!-- Branding -->
-        <div class="flex items-center space-x-3 cursor-pointer group shrink-0" onclick="switchView('home')">
-          <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white text-xl font-black shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform">
+        <div class="flex items-center space-x-2.5 sm:space-x-3.5 cursor-pointer group shrink-0" onclick="switchView('home')">
+          <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center text-white text-lg sm:text-xl font-black shadow-md sm:shadow-lg shadow-blue-500/25 active:scale-95 transition-all duration-300">
             <i class="fa-solid fa-graduation-cap"></i>
           </div>
           <div class="flex flex-col">
-            <span class="text-lg font-black tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent leading-none">
+            <span class="text-base sm:text-xl font-black tracking-tight bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600 bg-clip-text text-transparent leading-none">
               KSC HSC 2K27
             </span>
-            <span class="text-[11px] text-slate-500 dark:text-slate-400 font-semibold mt-1">
-              Made by Md. Ashiqul Islam Ashik
+            <span class="text-[9px] sm:text-[11px] text-slate-500 dark:text-slate-400 font-medium mt-0.5">
+              By <span class="font-bold text-slate-700 dark:text-slate-300">Md. Ashiqul Islam Ashik</span>
             </span>
           </div>
         </div>
 
         <!-- Desktop Navigation Bar -->
-        <nav class="hidden md:flex items-center space-x-1.5 font-medium text-xs">
-          <button onclick="switchView('home')" id="nav-home" class="nav-btn active flex flex-col items-center justify-center px-3.5 py-2 rounded-xl transition-all hover:bg-slate-100 dark:hover:bg-slate-800/80">
+        <nav class="hidden md:flex items-center space-x-2 font-semibold text-xs">
+          <button onclick="switchView('home')" id="nav-home" class="nav-btn active flex flex-col items-center justify-center px-4 py-2 rounded-xl transition-all hover:bg-slate-100 dark:hover:bg-slate-800/80">
             <i class="fa-solid fa-house text-base mb-1 text-sky-400"></i>
             <span>Home</span>
           </button>
-          <button onclick="switchView('routine')" id="nav-routine" class="nav-btn flex flex-col items-center justify-center px-3.5 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
+          <button onclick="switchView('routine')" id="nav-routine" class="nav-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
             <i class="fa-solid fa-calendar-days text-base mb-1 text-teal-400"></i>
             <span>Class Routine</span>
           </button>
-          <button onclick="switchView('announcements')" id="nav-announcements" class="nav-btn flex flex-col items-center justify-center px-3.5 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
+          <button onclick="switchView('announcements')" id="nav-announcements" class="nav-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
             <i class="fa-solid fa-bullhorn text-base mb-1 text-amber-400"></i>
             <span>Notices</span>
           </button>
-          <button onclick="switchView('notes')" id="nav-notes" class="nav-btn flex flex-col items-center justify-center px-3.5 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
+          <button onclick="switchView('notes')" id="nav-notes" class="nav-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
             <i class="fa-solid fa-book-open text-base mb-1 text-emerald-400"></i>
             <span>Notes</span>
           </button>
-          <button onclick="switchView('questions')" id="nav-questions" class="nav-btn flex flex-col items-center justify-center px-3.5 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
+          <button onclick="switchView('questions')" id="nav-questions" class="nav-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
             <i class="fa-solid fa-photo-film text-base mb-1 text-purple-400"></i>
             <span>Resource Vault</span>
           </button>
 
-          <button onclick="toggleTheme()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors ml-2">
+          <!-- Rotate Screen Orientation Toggle Button -->
+          <button onclick="toggleOrientationLock()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors ml-2 shadow-inner" title="Toggle Orientation Lock / Landscape Mode">
+            <i id="rotate-toggle-icon" class="fa-solid fa-mobile-screen-button text-base text-indigo-500"></i>
+          </button>
+
+          <!-- Theme Switcher -->
+          <button onclick="toggleTheme()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors shadow-inner" title="Toggle Dark/Light Mode">
             <i id="theme-toggle-icon" class="fa-solid fa-moon text-base text-amber-400"></i>
           </button>
         </nav>
 
         <!-- Mobile Header Controls -->
         <div class="flex items-center space-x-2 md:hidden">
-          <button onclick="toggleTheme()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-            <i id="theme-toggle-icon-mobile" class="fa-solid fa-moon text-base text-amber-400"></i>
+          <button onclick="toggleOrientationLock()" class="p-2 rounded-xl bg-slate-100/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 active:scale-95 transition-transform" title="Toggle Orientation Mode">
+            <i id="rotate-toggle-icon-mobile" class="fa-solid fa-mobile-screen-button text-sm text-indigo-500"></i>
+          </button>
+          <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-100/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 active:scale-95 transition-transform" title="Toggle Dark/Light Theme">
+            <i id="theme-toggle-icon-mobile" class="fa-solid fa-moon text-sm text-amber-400"></i>
           </button>
         </div>
 
@@ -179,81 +221,88 @@
   </header>
 
   <!-- MAIN CONTENT -->
-  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-28 md:pb-12">
+  <main class="flex-grow max-w-7xl w-full mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-6 pb-28 md:pb-12">
 
     <!-- VIEW 1: HOME PAGE -->
-    <section id="view-home" class="view-section space-y-6">
+    <section id="view-home" class="view-section space-y-4 sm:space-y-6">
       
-      <!-- Minimalist Compact Banner -->
-      <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-800 text-white p-4 sm:p-5 shadow-md">
-        <div class="flex items-center justify-between gap-3">
-          <div>
-            <h1 class="text-lg sm:text-xl font-black tracking-tight">
+      <!-- Minimalist Compact Banner with Ambient Glow -->
+      <div class="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-blue-700 via-indigo-700 to-purple-800 text-white p-4 sm:p-6 shadow-xl shadow-blue-500/10 border border-white/10">
+        <div class="absolute -right-10 -bottom-10 w-36 sm:w-44 h-36 sm:h-44 bg-purple-500/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-10 -top-10 w-36 sm:w-44 h-36 sm:h-44 bg-blue-400/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3">
+          <div class="space-y-1">
+            <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold bg-white/10 backdrop-blur-md border border-white/15 text-blue-100 mb-0.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> Academic Hub
+            </div>
+            <h1 class="text-lg sm:text-2xl font-black tracking-tight leading-tight">
               KSC HSC 2K27 Portal
             </h1>
-            <p class="text-xs text-blue-100 mt-0.5">
-              Class routines, study notes, question archive, and AI study tools.
+            <p class="text-[11px] sm:text-xs text-blue-100/90 max-w-xl leading-relaxed">
+              Class routines, lecture notes, resource vault, and AI subject tutors in one unified space.
             </p>
           </div>
-          <span class="text-[10px] bg-amber-400/20 text-amber-200 border border-amber-400/30 px-2.5 py-1 rounded-full font-bold shrink-0">Pre-Test: Nov 26, 2026</span>
+          <span class="text-[10px] sm:text-[11px] bg-amber-400/20 text-amber-200 border border-amber-400/30 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl sm:rounded-2xl font-bold shrink-0 self-start sm:self-center shadow-sm backdrop-blur-md">
+            <i class="fa-solid fa-calendar-check mr-1 text-amber-300"></i> Pre-Test: Nov 26, 2026
+          </span>
         </div>
       </div>
 
-      <!-- Navigation Grid -->
-      <div class="space-y-3">
-        <h2 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+      <!-- Quick Navigation Grid -->
+      <div class="space-y-2.5 sm:space-y-3">
+        <h2 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
           <i class="fa-solid fa-border-all text-blue-500" aria-hidden="true"></i> Quick Navigation
         </h2>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 sm:gap-3.5">
           
-          <button onclick="switchView('routine')" class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-teal-500 transition-all text-center space-y-1.5 group">
-            <div class="w-9 h-9 mx-auto rounded-xl bg-teal-100 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+          <button onclick="switchView('routine')" class="p-3 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm active:scale-95 transition-all text-center space-y-1.5 sm:space-y-2 group card-elevate">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 mx-auto rounded-xl bg-teal-100 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center text-base sm:text-lg shadow-sm group-hover:scale-110 group-hover:bg-teal-500 group-hover:text-white transition-all">
               <i class="fa-solid fa-calendar-days"></i>
             </div>
             <div>
               <span class="block text-xs font-bold text-slate-900 dark:text-slate-100">Class Routine</span>
-              <span class="text-[10px] text-slate-400">Timetable</span>
+              <span class="text-[9px] sm:text-[10px] text-slate-400">Timetable</span>
             </div>
           </button>
 
-          <button onclick="switchView('announcements')" class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-amber-500 transition-all text-center space-y-1.5 group">
-            <div class="w-9 h-9 mx-auto rounded-xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+          <button onclick="switchView('announcements')" class="p-3 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm active:scale-95 transition-all text-center space-y-1.5 sm:space-y-2 group card-elevate">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 mx-auto rounded-xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center text-base sm:text-lg shadow-sm group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-white transition-all">
               <i class="fa-solid fa-bullhorn"></i>
             </div>
             <div>
               <span class="block text-xs font-bold text-slate-900 dark:text-slate-100">Notices</span>
-              <span class="text-[10px] text-slate-400">Announcements</span>
+              <span class="text-[9px] sm:text-[10px] text-slate-400">Announcements</span>
             </div>
           </button>
 
-          <button onclick="switchView('notes')" class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-emerald-500 transition-all text-center space-y-1.5 group">
-            <div class="w-9 h-9 mx-auto rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+          <button onclick="switchView('notes')" class="p-3 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm active:scale-95 transition-all text-center space-y-1.5 sm:space-y-2 group card-elevate">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 mx-auto rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-base sm:text-lg shadow-sm group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white transition-all">
               <i class="fa-solid fa-book-open"></i>
             </div>
             <div>
               <span class="block text-xs font-bold text-slate-900 dark:text-slate-100">Subject Notes</span>
-              <span class="text-[10px] text-slate-400">Class Materials</span>
+              <span class="text-[9px] sm:text-[10px] text-slate-400">Class Materials</span>
             </div>
           </button>
 
-          <button onclick="switchView('questions')" class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-purple-500 transition-all text-center space-y-1.5 group">
-            <div class="w-9 h-9 mx-auto rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+          <button onclick="switchView('questions')" class="p-3 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm active:scale-95 transition-all text-center space-y-1.5 sm:space-y-2 group card-elevate">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 mx-auto rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center text-base sm:text-lg shadow-sm group-hover:scale-110 group-hover:bg-purple-500 group-hover:text-white transition-all">
               <i class="fa-solid fa-photo-film"></i>
             </div>
             <div>
               <span class="block text-xs font-bold text-slate-900 dark:text-slate-100">Resource Vault</span>
-              <span class="text-[10px] text-slate-400">Routines, Questions & Photos</span>
+              <span class="text-[9px] sm:text-[10px] text-slate-400">Questions & Photos</span>
             </div>
           </button>
 
           <!-- Contact Link -->
-          <a href="https://www.facebook.com/pixelatedlevel/" target="_blank" class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-blue-500 transition-all text-center space-y-1.5 group block col-span-2 sm:col-span-1">
-            <div class="w-9 h-9 mx-auto rounded-xl bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+          <a href="https://www.facebook.com/pixelatedlevel/" target="_blank" class="p-3 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm active:scale-95 transition-all text-center space-y-1.5 sm:space-y-2 group card-elevate block col-span-2 sm:col-span-1">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 mx-auto rounded-xl bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-base sm:text-lg shadow-sm group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all">
               <i class="fa-brands fa-facebook"></i>
             </div>
             <div>
               <span class="block text-xs font-bold text-slate-900 dark:text-slate-100">Contact Ashik</span>
-              <span class="text-[10px] text-slate-400">Facebook Profile</span>
+              <span class="text-[9px] sm:text-[10px] text-slate-400">Facebook Profile</span>
             </div>
           </a>
 
@@ -261,58 +310,58 @@
       </div>
 
       <!-- NotebookLM AI Workspaces Section on Home Page -->
-      <div class="space-y-3 pt-2">
-        <h2 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+      <div class="space-y-2.5 sm:space-y-3 pt-1">
+        <h2 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
           <i class="fa-solid fa-robot text-indigo-500"></i> NotebookLM AI Tutors
         </h2>
 
-        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
           
-          <a href="https://notebook.google.com/notebook/438e656f-656c-4eed-8eec-8d5bf80342fd" target="_blank" class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-blue-500 transition-all text-center space-y-1.5 group block">
-            <div class="w-9 h-9 mx-auto rounded-xl bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+          <a href="https://notebook.google.com/notebook/438e656f-656c-4eed-8eec-8d5bf80342fd" target="_blank" class="p-3 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm active:scale-95 transition-all text-center space-y-1.5 sm:space-y-2 group card-elevate block">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 mx-auto rounded-xl bg-blue-100 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center text-base sm:text-lg shadow-sm group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all">
               <i class="fa-solid fa-laptop-code"></i>
             </div>
             <div>
               <span class="block text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center justify-center gap-1">
-                ICT AI <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-blue-500"></i>
+                ICT AI <i class="fa-solid fa-arrow-up-right-from-square text-[8px] sm:text-[9px] text-blue-500"></i>
               </span>
-              <span class="text-[10px] text-slate-400">Workspace</span>
+              <span class="text-[9px] sm:text-[10px] text-slate-400">Workspace</span>
             </div>
           </a>
 
-          <a href="https://notebook.google.com/notebook/245cb4a0-de08-4c6e-8b57-7a9b5c92953c" target="_blank" class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-purple-500 transition-all text-center space-y-1.5 group block">
-            <div class="w-9 h-9 mx-auto rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+          <a href="https://notebook.google.com/notebook/245cb4a0-de08-4c6e-8b57-7a9b5c92953c" target="_blank" class="p-3 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm active:scale-95 transition-all text-center space-y-1.5 sm:space-y-2 group card-elevate block">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 mx-auto rounded-xl bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 flex items-center justify-center text-base sm:text-lg shadow-sm group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all">
               <i class="fa-solid fa-atom"></i>
             </div>
             <div>
               <span class="block text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center justify-center gap-1">
-                Physics AI <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-purple-500"></i>
+                Physics AI <i class="fa-solid fa-arrow-up-right-from-square text-[8px] sm:text-[9px] text-purple-500"></i>
               </span>
-              <span class="text-[10px] text-slate-400">Workspace</span>
+              <span class="text-[9px] sm:text-[10px] text-slate-400">Workspace</span>
             </div>
           </a>
 
-          <a href="https://notebook.google.com/notebook/ce7afc49-4714-4246-b915-f7137c672978" target="_blank" class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-emerald-500 transition-all text-center space-y-1.5 group block">
-            <div class="w-9 h-9 mx-auto rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+          <a href="https://notebook.google.com/notebook/ce7afc49-4714-4246-b915-f7137c672978" target="_blank" class="p-3 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm active:scale-95 transition-all text-center space-y-1.5 sm:space-y-2 group card-elevate block">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 mx-auto rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-base sm:text-lg shadow-sm group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all">
               <i class="fa-solid fa-flask"></i>
             </div>
             <div>
               <span class="block text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center justify-center gap-1">
-                Chemistry AI <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-emerald-500"></i>
+                Chemistry AI <i class="fa-solid fa-arrow-up-right-from-square text-[8px] sm:text-[9px] text-emerald-500"></i>
               </span>
-              <span class="text-[10px] text-slate-400">Workspace</span>
+              <span class="text-[9px] sm:text-[10px] text-slate-400">Workspace</span>
             </div>
           </a>
 
-          <a href="https://notebook.google.com/notebook/3feba8cb-baef-4de6-831e-619c6f73a7db" target="_blank" class="p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md hover:border-amber-500 transition-all text-center space-y-1.5 group block">
-            <div class="w-9 h-9 mx-auto rounded-xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg group-hover:scale-110 transition-transform">
+          <a href="https://notebook.google.com/notebook/3feba8cb-baef-4de6-831e-619c6f73a7db" target="_blank" class="p-3 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm active:scale-95 transition-all text-center space-y-1.5 sm:space-y-2 group card-elevate block">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 mx-auto rounded-xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center text-base sm:text-lg shadow-sm group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-white transition-all">
               <i class="fa-solid fa-calculator"></i>
             </div>
             <div>
               <span class="block text-xs font-bold text-slate-900 dark:text-slate-100 flex items-center justify-center gap-1">
-                Math AI <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-amber-500"></i>
+                Math AI <i class="fa-solid fa-arrow-up-right-from-square text-[8px] sm:text-[9px] text-amber-500"></i>
               </span>
-              <span class="text-[10px] text-slate-400">Workspace</span>
+              <span class="text-[9px] sm:text-[10px] text-slate-400">Workspace</span>
             </div>
           </a>
 
@@ -322,70 +371,70 @@
     </section>
 
     <!-- VIEW 2: SUBJECT NOTES -->
-    <section id="view-notes" class="view-section hidden space-y-6">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+    <section id="view-notes" class="view-section hidden space-y-4 sm:space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
         <div>
-          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+          <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
             <i class="fa-solid fa-book-open text-emerald-500"></i> Lecture Notes & Material
           </h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Filter study materials by subject or paper</p>
+          <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">Filter study materials by subject or paper</p>
         </div>
-        <div class="flex flex-wrap gap-1.5">
-          <button onclick="filterNotes('all')" id="filter-subject-all" class="note-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-600 text-white">All</button>
-          <button onclick="filterNotes('ICT')" id="filter-subject-ICT" class="note-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">ICT</button>
-          <button onclick="filterNotes('Physics')" id="filter-subject-Physics" class="note-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Physics</button>
-          <button onclick="filterNotes('Chemistry')" id="filter-subject-Chemistry" class="note-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Chemistry</button>
-          <button onclick="filterNotes('Math')" id="filter-subject-Math" class="note-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Math</button>
-          <div class="h-6 w-[1px] bg-slate-200 dark:bg-slate-700 mx-1 self-center"></div>
-          <button onclick="filterNotesPaper('1st Paper')" id="filter-paper-1st" class="note-paper-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">1st Paper</button>
-          <button onclick="filterNotesPaper('2nd Paper')" id="filter-paper-2nd" class="note-paper-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">2nd Paper</button>
+        <div class="flex flex-wrap gap-1.5 pt-1 sm:pt-0">
+          <button onclick="filterNotes('all')" id="filter-subject-all" class="note-filter-btn px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-bold bg-blue-600 text-white active:scale-95 transition-transform">All</button>
+          <button onclick="filterNotes('ICT')" id="filter-subject-ICT" class="note-filter-btn px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 active:scale-95 transition-transform">ICT</button>
+          <button onclick="filterNotes('Physics')" id="filter-subject-Physics" class="note-filter-btn px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 active:scale-95 transition-transform">Physics</button>
+          <button onclick="filterNotes('Chemistry')" id="filter-subject-Chemistry" class="note-filter-btn px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 active:scale-95 transition-transform">Chemistry</button>
+          <button onclick="filterNotes('Math')" id="filter-subject-Math" class="note-filter-btn px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 active:scale-95 transition-transform">Math</button>
+          <div class="h-5 w-[1px] bg-slate-200 dark:bg-slate-700 mx-0.5 self-center"></div>
+          <button onclick="filterNotesPaper('1st Paper')" id="filter-paper-1st" class="note-paper-btn px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 active:scale-95 transition-transform">1st Paper</button>
+          <button onclick="filterNotesPaper('2nd Paper')" id="filter-paper-2nd" class="note-paper-btn px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 active:scale-95 transition-transform">2nd Paper</button>
         </div>
       </div>
 
-      <div id="notes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div id="notes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
         <!-- Rendered via JS -->
       </div>
     </section>
 
     <!-- VIEW 3: CLASS ROUTINE -->
-    <section id="view-routine" class="view-section hidden space-y-6">
-      <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <section id="view-routine" class="view-section hidden space-y-4 sm:space-y-6">
+      <div class="bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4">
         <div>
-          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+          <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
             <i class="fa-solid fa-calendar-days text-teal-500"></i> Class Routine Timetable
           </h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Official daily schedule split by academic group</p>
+          <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">Official daily schedule split by academic group</p>
         </div>
         
         <!-- Routine Switcher -->
         <div class="flex flex-wrap p-1 bg-slate-100 dark:bg-slate-800 rounded-2xl gap-1">
-          <button onclick="switchRoutineGroup('science')" id="grp-btn-science" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm">Science</button>
-          <button onclick="switchRoutineGroup('business')" id="grp-btn-business" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-400">Business Studies</button>
-          <button onclick="switchRoutineGroup('humanities')" id="grp-btn-humanities" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-400">Humanities</button>
-          <button onclick="switchRoutineGroup('exam')" id="grp-btn-exam" class="px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
-            <i class="fa-solid fa-clock font-bold"></i> Exam Routine <span class="px-1.5 py-0.5 rounded-full text-[9px] bg-amber-500/20 text-amber-600 dark:text-amber-300">Coming Soon</span>
+          <button onclick="switchRoutineGroup('science')" id="grp-btn-science" class="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold transition-all bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm active:scale-95">Science</button>
+          <button onclick="switchRoutineGroup('business')" id="grp-btn-business" class="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold transition-all text-slate-600 dark:text-slate-400 active:scale-95">Business Studies</button>
+          <button onclick="switchRoutineGroup('humanities')" id="grp-btn-humanities" class="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold transition-all text-slate-600 dark:text-slate-400 active:scale-95">Humanities</button>
+          <button onclick="switchRoutineGroup('exam')" id="grp-btn-exam" class="px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold transition-all text-amber-600 dark:text-amber-400 flex items-center gap-1 active:scale-95">
+            <i class="fa-solid fa-clock font-bold"></i> Exam Routine
           </button>
         </div>
       </div>
 
-      <div id="routine-container" class="space-y-6">
+      <div id="routine-container" class="space-y-4 sm:space-y-6">
         <!-- Rendered via JS -->
       </div>
     </section>
 
     <!-- VIEW 4: NOTEBOOKLM AI -->
-    <section id="view-notebooklm" class="view-section hidden space-y-6">
-      <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-6 sm:p-8 rounded-3xl text-white shadow-xl space-y-3 border border-indigo-900/50">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-indigo-500/20 border border-indigo-400/30 text-indigo-300">
+    <section id="view-notebooklm" class="view-section hidden space-y-4 sm:space-y-6">
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-5 sm:p-8 rounded-2xl sm:rounded-3xl text-white shadow-xl space-y-2.5 sm:space-y-3 border border-indigo-900/50">
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/20 border border-indigo-400/30 text-indigo-300">
           <i class="fa-solid fa-microchip"></i> AI Companion Hub
         </div>
-        <h2 class="text-2xl sm:text-3xl font-black">NotebookLM Subject Workspaces</h2>
-        <p class="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
+        <h2 class="text-xl sm:text-3xl font-black">NotebookLM Subject Workspaces</h2>
+        <p class="text-[11px] sm:text-xs text-slate-300 max-w-2xl leading-relaxed">
           Select a subject workspace below to launch Google NotebookLM initialized with your syllabus sources.
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-5">
         
         <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
           <div class="space-y-3">
@@ -443,62 +492,64 @@
     </section>
 
     <!-- VIEW 5: QUESTION ARCHIVE -->
-    <section id="view-questions" class="view-section hidden space-y-6">
-      <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <section id="view-questions" class="view-section hidden space-y-4 sm:space-y-6">
+      <div class="bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div>
-          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+          <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
             <i class="fa-solid fa-photo-film text-purple-500"></i> Resource & Photo Vault
           </h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Class routines, notice photos, question papers, practice materials & important snapshots</p>
+          <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">Class routines, notice photos, question papers & important snapshots</p>
         </div>
       </div>
 
-      <div id="questions-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div id="questions-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5 sm:gap-4">
         <!-- Rendered via JS -->
       </div>
     </section>
 
     <!-- VIEW 6: NOTICES -->
-    <section id="view-announcements" class="view-section hidden space-y-6">
-      <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex justify-between items-center">
+    <section id="view-announcements" class="view-section hidden space-y-4 sm:space-y-6">
+      <div class="bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm flex justify-between items-center">
         <div>
-          <h2 class="text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+          <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
             <i class="fa-solid fa-bullhorn text-amber-500"></i> College Announcements & Notices
           </h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Official updates regarding exams and classes</p>
+          <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">Official updates regarding exams and classes</p>
         </div>
       </div>
 
-      <div id="notices-list" class="space-y-4">
+      <div id="notices-list" class="space-y-3.5 sm:space-y-4">
         <!-- Rendered via JS -->
       </div>
     </section>
 
   </main>
 
-  <!-- MOBILE BOTTOM NAVIGATION -->
-  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800 flex items-center justify-around py-2 px-1 text-[10px] font-bold text-slate-600 dark:text-slate-400 shadow-lg">
-    <button onclick="switchView('home')" id="mob-nav-home" class="flex flex-col items-center justify-center p-1 text-blue-600 dark:text-blue-400">
-      <i class="fa-solid fa-house text-base mb-0.5 text-sky-400"></i>
-      <span>Home</span>
-    </button>
-    <button onclick="switchView('routine')" id="mob-nav-routine" class="flex flex-col items-center justify-center p-1">
-      <i class="fa-solid fa-calendar-days text-base mb-0.5 text-teal-400"></i>
-      <span>Routine</span>
-    </button>
-    <button onclick="switchView('announcements')" id="mob-nav-announcements" class="flex flex-col items-center justify-center p-1">
-      <i class="fa-solid fa-bullhorn text-base mb-0.5 text-amber-400"></i>
-      <span>Notices</span>
-    </button>
-    <button onclick="switchView('notes')" id="mob-nav-notes" class="flex flex-col items-center justify-center p-1">
-      <i class="fa-solid fa-book-open text-base mb-0.5 text-emerald-400"></i>
-      <span>Notes</span>
-    </button>
-    <button onclick="switchView('questions')" id="mob-nav-questions" class="flex flex-col items-center justify-center p-1">
-      <i class="fa-solid fa-photo-film text-base mb-0.5 text-purple-400"></i>
-      <span>Vault</span>
-    </button>
-  </nav>
+  <!-- MOBILE BOTTOM FLOATING APP DOCK BAR -->
+  <div class="md:hidden fixed bottom-3 left-3 right-3 z-40">
+    <nav class="bg-white/85 dark:bg-slate-900/90 backdrop-blur-2xl border border-slate-200/80 dark:border-slate-800/90 rounded-2xl flex items-center justify-around py-2 px-2 text-[10px] font-bold text-slate-600 dark:text-slate-400 shadow-xl shadow-slate-900/10 dark:shadow-slate-950/40 transition-colors">
+      <button onclick="switchView('home')" id="mob-nav-home" class="mob-nav-btn active flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all active:scale-90">
+        <i class="fa-solid fa-house text-lg mb-0.5 text-sky-500 dark:text-sky-400"></i>
+        <span>Home</span>
+      </button>
+      <button onclick="switchView('routine')" id="mob-nav-routine" class="mob-nav-btn flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all active:scale-90">
+        <i class="fa-solid fa-calendar-days text-lg mb-0.5 text-teal-500 dark:text-teal-400"></i>
+        <span>Routine</span>
+      </button>
+      <button onclick="switchView('announcements')" id="mob-nav-announcements" class="mob-nav-btn flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all active:scale-90">
+        <i class="fa-solid fa-bullhorn text-lg mb-0.5 text-amber-500 dark:text-amber-400"></i>
+        <span>Notices</span>
+      </button>
+      <button onclick="switchView('notes')" id="mob-nav-notes" class="mob-nav-btn flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all active:scale-90">
+        <i class="fa-solid fa-book-open text-lg mb-0.5 text-emerald-500 dark:text-emerald-400"></i>
+        <span>Notes</span>
+      </button>
+      <button onclick="switchView('questions')" id="mob-nav-questions" class="mob-nav-btn flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all active:scale-90">
+        <i class="fa-solid fa-photo-film text-lg mb-0.5 text-purple-500 dark:text-purple-400"></i>
+        <span>Vault</span>
+      </button>
+    </nav>
+  </div>
 
   <!-- BUILT-IN PDF READER MODAL -->
   <div id="pdf-modal" class="fixed inset-0 z-50 hidden bg-slate-950/95 backdrop-blur-md flex flex-col select-none overflow-hidden">
@@ -603,7 +654,7 @@
         subject: "ICT",
         paper: "Both (1st & 2nd)",
         description: "Complete note on Chapter 3 covering Number Systems and Digital Devices.",
-        url: "https://drive.google.com/file/d/13zzP1eIkkPOLwD1WhhGHiVTZdfCIT7ha/view?usp=drive_link"
+        url: "https://drive.google.com/file/d/1GjAZ6mWZtR89M6H1sHnXBcbPTewxrH2i/view"
       }
     ];
 
@@ -637,7 +688,7 @@
         title: "Class Routine Schedule Photo",
         subject: "Routine Photo",
         date: "2026",
-        url: "https://drive.google.com/file/d/1GjAZ6mWZtR89M6H1sHnXBcbPTewxrH2i/view?usp=drive_link"
+        url: "https://drive.google.com/file/d/1GjAZ6mWZtR89M6H1sHnXBcbPTewxrH2i/view"
       }
     ];
 
@@ -682,10 +733,15 @@
       const activeView = document.getElementById('view-' + viewId);
       if (activeView) activeView.classList.remove('hidden');
 
-      // Update Nav Buttons
+      // Update Desktop Nav Buttons
       document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
       const navBtn = document.getElementById('nav-' + viewId);
       if (navBtn) navBtn.classList.add('active');
+
+      // Update Mobile Floating Dock Buttons
+      document.querySelectorAll('.mob-nav-btn').forEach(btn => btn.classList.remove('active'));
+      const mobNavBtn = document.getElementById('mob-nav-' + viewId);
+      if (mobNavBtn) mobNavBtn.classList.add('active');
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -936,7 +992,9 @@
     // MODALS & PREVIEWS
     function openPdfModal(title, url) {
       document.getElementById('pdf-modal-title').innerText = title;
-      const embedUrl = url.replace('/view?usp=drive_link', '/preview').replace('/view', '/preview');
+      const embedUrl = url.includes('drive.google.com') 
+        ? url.replace('/view?usp=drive_link', '/preview').replace('/view', '/preview')
+        : url;
       document.getElementById('pdf-frame').src = embedUrl;
       document.getElementById('pdf-download-btn').href = url;
       document.getElementById('pdf-modal').classList.remove('hidden');
@@ -1146,10 +1204,92 @@
       }, { passive: false });
     }
 
+    // ORIENTATION ROTATE TOGGLE LOGIC
+    async function toggleOrientationLock() {
+      try {
+        if (screen.orientation && screen.orientation.lock) {
+          if (screen.orientation.type.startsWith('portrait')) {
+            await screen.orientation.lock('landscape');
+          } else {
+            await screen.orientation.lock('portrait');
+          }
+        } else {
+          document.body.classList.toggle('rotate-90');
+        }
+      } catch (err) {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().then(() => {
+            if (screen.orientation && screen.orientation.lock) {
+              screen.orientation.lock('landscape').catch(() => {});
+            }
+          }).catch(() => {});
+        } else {
+          document.exitFullscreen().catch(() => {});
+        }
+      }
+    }
+
+    // AUTOMATIC OFFLINE DOCUMENT & PHOTO CACHING
+    async function cacheDocumentForOffline(url) {
+      if ('caches' in window) {
+        try {
+          const cache = await caches.open('ksc-portal-docs-v1');
+          const fileIdMatch = url.match(/\/d\/([^\/]+)/);
+          const urlsToCache = [url];
+          
+          if (fileIdMatch && fileIdMatch[1]) {
+            urlsToCache.push(`https://drive.google.com/thumbnail?id=${fileIdMatch[1]}&sz=w1200`);
+            urlsToCache.push(`https://drive.google.com/thumbnail?id=${fileIdMatch[1]}&sz=w600`);
+            urlsToCache.push(`https://drive.google.com/file/d/${fileIdMatch[1]}/preview`);
+          }
+
+          urlsToCache.forEach(u => {
+            cache.add(u).catch(() => {});
+          });
+        } catch (e) {
+          console.log('Document CacheStorage active');
+        }
+      }
+    }
+
+    // SERVICE WORKER REGISTRATION
+    function registerAutoCacheServiceWorker() {
+      if ('serviceWorker' in navigator) {
+        const swBlob = new Blob([`
+          const CACHE_NAME = 'ksc-hsc-2k27-v1';
+          self.addEventListener('install', (e) => {
+            self.skipWaiting();
+          });
+          self.addEventListener('activate', (e) => {
+            e.waitUntil(clients.claim());
+          });
+          self.addEventListener('fetch', (e) => {
+            if (e.request.method !== 'GET') return;
+            e.respondWith(
+              caches.match(e.request).then((cached) => {
+                const networked = fetch(e.request).then((res) => {
+                  if (res && res.status === 200) {
+                    const cacheCopy = res.clone();
+                    caches.open(CACHE_NAME).then((cache) => cache.put(e.request, cacheCopy));
+                  }
+                  return res;
+                }).catch(() => cached);
+                return cached || networked;
+              })
+            );
+          });
+        `], { type: 'application/javascript' });
+
+        const swUrl = URL.createObjectURL(swBlob);
+        navigator.serviceWorker.register(swUrl).catch(() => {});
+      }
+    }
+
     // INITIALIZATION
     function initializePortal() {
       initTheme();
       cacheDataLocally();
+      registerAutoCacheServiceWorker();
       renderNotes('all');
       renderClassRoutine('science');
       renderQuestions();
