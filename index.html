@@ -116,6 +116,20 @@
       background: #60a5fa;
       box-shadow: 0 0 8px #60a5fa;
     }
+
+    /* CSS Landscape Rotation Fallback */
+    .rotate-view-landscape {
+      transform: rotate(90deg);
+      transform-origin: center center;
+      width: 100vh !important;
+      height: 100vw !important;
+      max-width: none !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      overflow-y: auto !important;
+      z-index: 999 !important;
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 min-h-screen flex flex-col selection:bg-blue-500 selection:text-white">
@@ -181,6 +195,10 @@
           <button onclick="switchView('routine')" id="nav-routine" class="nav-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
             <i class="fa-solid fa-calendar-days text-base mb-1 text-teal-400"></i>
             <span>Class Routine</span>
+          </button>
+          <button onclick="switchView('formulas')" id="nav-formulas" class="nav-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
+            <i class="fa-solid fa-square-root-variable text-base mb-1 text-indigo-400"></i>
+            <span>Formulas</span>
           </button>
           <button onclick="switchView('announcements')" id="nav-announcements" class="nav-btn flex flex-col items-center justify-center px-4 py-2 rounded-xl transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80">
             <i class="fa-solid fa-bullhorn text-base mb-1 text-amber-400"></i>
@@ -250,7 +268,7 @@
         <h2 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
           <i class="fa-solid fa-border-all text-blue-500" aria-hidden="true"></i> Quick Navigation
         </h2>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2.5 sm:gap-3.5">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 sm:gap-3.5">
           
           <button onclick="switchView('routine')" class="p-3 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm active:scale-95 transition-all text-center space-y-1.5 sm:space-y-2 group card-elevate">
             <div class="w-9 h-9 sm:w-10 sm:h-10 mx-auto rounded-xl bg-teal-100 dark:bg-teal-950/60 text-teal-600 dark:text-teal-400 flex items-center justify-center text-base sm:text-lg shadow-sm group-hover:scale-110 group-hover:bg-teal-500 group-hover:text-white transition-all">
@@ -259,6 +277,16 @@
             <div>
               <span class="block text-xs font-bold text-slate-900 dark:text-slate-100">Class Routine</span>
               <span class="text-[9px] sm:text-[10px] text-slate-400">Timetable</span>
+            </div>
+          </button>
+
+          <button onclick="switchView('formulas')" class="p-3 sm:p-4 rounded-2xl bg-white dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm active:scale-95 transition-all text-center space-y-1.5 sm:space-y-2 group card-elevate">
+            <div class="w-9 h-9 sm:w-10 sm:h-10 mx-auto rounded-xl bg-indigo-100 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-base sm:text-lg shadow-sm group-hover:scale-110 group-hover:bg-indigo-500 group-hover:text-white transition-all">
+              <i class="fa-solid fa-square-root-variable"></i>
+            </div>
+            <div>
+              <span class="block text-xs font-bold text-slate-900 dark:text-slate-100">Formula Bank</span>
+              <span class="text-[9px] sm:text-[10px] text-slate-400">HM, Phy, Che</span>
             </div>
           </button>
 
@@ -389,6 +417,43 @@
       </div>
 
       <div id="notes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- VIEW: FORMULA BANK -->
+    <section id="view-formulas" class="view-section hidden space-y-4 sm:space-y-6">
+      <div class="bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div>
+            <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+              <i class="fa-solid fa-square-root-variable text-indigo-500"></i> Higher Math, Physics & Chemistry Formula Sheet
+            </h2>
+            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-0.5">Quick chapter-wise equation reference for 1st & 2nd Papers</p>
+          </div>
+          <div class="relative w-full md:w-64">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input type="text" id="formula-search" oninput="renderFormulas()" placeholder="Search formula, topic or chapter..." class="w-full pl-9 pr-3 py-2 rounded-xl text-xs bg-slate-100 dark:bg-slate-800 border-none text-slate-800 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500">
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+          <div class="flex items-center gap-1">
+            <button onclick="setFormulaSubject('all')" id="fsub-all" class="fsub-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 text-white">All Subjects</button>
+            <button onclick="setFormulaSubject('Physics')" id="fsub-Physics" class="fsub-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Physics</button>
+            <button onclick="setFormulaSubject('Chemistry')" id="fsub-Chemistry" class="fsub-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Chemistry</button>
+            <button onclick="setFormulaSubject('Math')" id="fsub-Math" class="fsub-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">Higher Math</button>
+          </div>
+          <div class="h-4 w-[1px] bg-slate-200 dark:bg-slate-700 mx-1"></div>
+          <div class="flex items-center gap-1">
+            <button onclick="setFormulaPaper('all')" id="fpaper-all" class="fpaper-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 text-white">All Papers</button>
+            <button onclick="setFormulaPaper('1st')" id="fpaper-1st" class="fpaper-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">1st Paper</button>
+            <button onclick="setFormulaPaper('2nd')" id="fpaper-2nd" class="fpaper-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">2nd Paper</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="formula-container" class="space-y-4">
         <!-- Rendered via JS -->
       </div>
     </section>
@@ -525,23 +590,27 @@
   <!-- MOBILE BOTTOM FLOATING APP DOCK BAR -->
   <div class="md:hidden fixed bottom-3 left-3 right-3 z-40">
     <nav class="bg-white/85 dark:bg-slate-900/90 backdrop-blur-2xl border border-slate-200/80 dark:border-slate-800/90 rounded-2xl flex items-center justify-around py-2 px-2 text-[10px] font-bold text-slate-600 dark:text-slate-400 shadow-xl shadow-slate-900/10 dark:shadow-slate-950/40 transition-colors">
-      <button onclick="switchView('home')" id="mob-nav-home" class="mob-nav-btn active flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all active:scale-90">
+      <button onclick="switchView('home')" id="mob-nav-home" class="mob-nav-btn active flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all active:scale-90">
         <i class="fa-solid fa-house text-lg mb-0.5 text-sky-500 dark:text-sky-400"></i>
         <span>Home</span>
       </button>
-      <button onclick="switchView('routine')" id="mob-nav-routine" class="mob-nav-btn flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all active:scale-90">
+      <button onclick="switchView('routine')" id="mob-nav-routine" class="mob-nav-btn flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all active:scale-90">
         <i class="fa-solid fa-calendar-days text-lg mb-0.5 text-teal-500 dark:text-teal-400"></i>
         <span>Routine</span>
       </button>
-      <button onclick="switchView('announcements')" id="mob-nav-announcements" class="mob-nav-btn flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all active:scale-90">
+      <button onclick="switchView('formulas')" id="mob-nav-formulas" class="mob-nav-btn flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all active:scale-90">
+        <i class="fa-solid fa-square-root-variable text-lg mb-0.5 text-indigo-500 dark:text-indigo-400"></i>
+        <span>Formulas</span>
+      </button>
+      <button onclick="switchView('announcements')" id="mob-nav-announcements" class="mob-nav-btn flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all active:scale-90">
         <i class="fa-solid fa-bullhorn text-lg mb-0.5 text-amber-500 dark:text-amber-400"></i>
         <span>Notices</span>
       </button>
-      <button onclick="switchView('notes')" id="mob-nav-notes" class="mob-nav-btn flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all active:scale-90">
+      <button onclick="switchView('notes')" id="mob-nav-notes" class="mob-nav-btn flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all active:scale-90">
         <i class="fa-solid fa-book-open text-lg mb-0.5 text-emerald-500 dark:text-emerald-400"></i>
         <span>Notes</span>
       </button>
-      <button onclick="switchView('questions')" id="mob-nav-questions" class="mob-nav-btn flex flex-col items-center justify-center py-1 px-3 rounded-xl transition-all active:scale-90">
+      <button onclick="switchView('questions')" id="mob-nav-questions" class="mob-nav-btn flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all active:scale-90">
         <i class="fa-solid fa-photo-film text-lg mb-0.5 text-purple-500 dark:text-purple-400"></i>
         <span>Vault</span>
       </button>
@@ -644,424 +713,666 @@
   <!-- SCRIPT LOGIC -->
   <script>
     // DATA DECLARATIONS
+    const formulaData = [
+      // PHYSICS 1ST PAPER
+      {
+        subject: "Physics", paper: "1st", chapter: "Chapter 2: Vector",
+        formulas: [
+          { name: "Resultant Magnitude", formula: "R = √(P² + Q² + 2PQ cos α)" },
+          { name: "Resultant Angle", formula: "tan θ = (Q sin α) / (P + Q cos α)" },
+          { name: "Dot Product", formula: "A · B = AB cos θ = AxBx + AyBy + AzBz" },
+          { name: "Cross Product", formula: "|A × B| = AB sin θ n̂" },
+          { name: "Gradient / Divergence / Curl", formula: "∇ = î(∂/∂x) + ĵ(∂/∂y) + k̂(∂/∂z)" }
+        ]
+      },
+      {
+        subject: "Physics", paper: "1st", chapter: "Chapter 3: Newtonian Mechanics",
+        formulas: [
+          { name: "Force & Momentum", formula: "F = ma = dp/dt" },
+          { name: "Impulse of Force", formula: "J = F · Δt = Δp = m(v - u)" },
+          { name: "Centripetal Force", formula: "Fc = mv²/r = mω²r" },
+          { name: "Bank Angle", formula: "tan θ = v² / (rg)" },
+          { name: "Torque & Angular Momentum", formula: "τ = Iα = r × F,  L = Iω" }
+        ]
+      },
+      {
+        subject: "Physics", paper: "1st", chapter: "Chapter 4: Work, Energy & Power",
+        formulas: [
+          { name: "Work Done", formula: "W = F · s cos θ" },
+          { name: "Kinetic & Potential Energy", formula: "Ek = ½ mv²,  Ep = mgh" },
+          { name: "Power", formula: "P = W / t = F · v" },
+          { name: "Efficiency", formula: "η = (P_out / P_in) × 100%" }
+        ]
+      },
+      {
+        subject: "Physics", paper: "1st", chapter: "Chapter 5: Gravitation & Gravity",
+        formulas: [
+          { name: "Gravitational Force", formula: "F = G (m1 m2) / r²" },
+          { name: "Acceleration due to Gravity", formula: "g = GM / R²" },
+          { name: "g at Altitude h", formula: "g' = g (1 - 2h/R)" },
+          { name: "Escape Velocity", formula: "ve = √(2gR) = √(2GM/R)" },
+          { name: "Orbital Velocity", formula: "vo = √(gR) = √(GM/(R+h))" }
+        ]
+      },
+      {
+        subject: "Physics", paper: "1st", chapter: "Chapter 10: Ideal Gas & Thermodynamics",
+        formulas: [
+          { name: "Ideal Gas Law", formula: "PV = nRT = N kB T" },
+          { name: "RMS Velocity", formula: "Crms = √(3RT/M) = √(3P/ρ)" },
+          { name: "Kinetic Energy of Gas", formula: "Ek = 3/2 nRT = 3/2 N kB T" },
+          { name: "First Law of Thermodynamics", formula: "dQ = dU + dW" }
+        ]
+      },
+
+      // PHYSICS 2ND PAPER
+      {
+        subject: "Physics", paper: "2nd", chapter: "Chapter 1: Thermodynamics",
+        formulas: [
+          { name: "Carnot Engine Efficiency", formula: "η = 1 - (T2 / T1) = 1 - (Q2 / Q1)" },
+          { name: "Entropy Change", formula: "dS = dQ / T" },
+          { name: "Work in Isothermal Process", formula: "W = nRT ln(V2 / V1)" },
+          { name: "Adiabatic Process Relation", formula: "P V^γ = const,  T V^(γ-1) = const" }
+        ]
+      },
+      {
+        subject: "Physics", paper: "2nd", chapter: "Chapter 2: Static Electricity",
+        formulas: [
+          { name: "Coulomb's Law", formula: "F = (1 / 4πε₀) · (q1 q2 / r²)" },
+          { name: "Electric Field Strength", formula: "E = F / q = (1 / 4πε₀) · (q / r²)" },
+          { name: "Electric Potential", formula: "V = (1 / 4πε₀) · (q / r)" },
+          { name: "Capacitance", formula: "C = Q / V = ε₀ A / d" }
+        ]
+      },
+      {
+        subject: "Physics", paper: "2nd", chapter: "Chapter 3: Current Electricity",
+        formulas: [
+          { name: "Ohm's Law & Resistance", formula: "V = IR,  R = ρ L / A" },
+          { name: "Equivalent Resistance", formula: "Rs = R1 + R2,  1/Rp = 1/R1 + 1/R2" },
+          { name: "Joule's Heating Law", formula: "H = I² R t" },
+          { name: "Wheatstone Bridge Principle", formula: "P / Q = R / S" }
+        ]
+      },
+      {
+        subject: "Physics", paper: "2nd", chapter: "Chapter 8: Modern Physics",
+        formulas: [
+          { name: "Mass-Energy Equivalence", formula: "E = mc²" },
+          { name: "Photoelectric Equation", formula: "hf = W₀ + Emax = hf₀ + ½ mv²" },
+          { name: "de Broglie Wavelength", formula: "λ = h / p = h / (mv)" },
+          { name: "Half-Life & Decay Constant", formula: "T1/2 = 0.693 / λ,  N = N₀ e^(-λt)" }
+        ]
+      },
+
+      // CHEMISTRY 1ST PAPER
+      {
+        subject: "Chemistry", paper: "1st", chapter: "Chapter 2: Qualitative Chemistry",
+        formulas: [
+          { name: "Bohr Energy Level", formula: "En = -13.6 Z² / n² eV" },
+          { name: "Rydberg Wave Number", formula: "1/λ = ν̄ = R_H Z² (1/n1² - 1/n2²)" },
+          { name: "Solubility Product", formula: "Ksp = [A^m+]^n [B^n-]^m" },
+          { name: "de Broglie Hypothesis", formula: "λ = h / (mv)" }
+        ]
+      },
+      {
+        subject: "Chemistry", paper: "1st", chapter: "Chapter 4: Chemical Changes",
+        formulas: [
+          { name: "Equilibrium Constants", formula: "Kp = Kc (RT)^Δn" },
+          { name: "pH and pOH Calculation", formula: "pH = -log[H+],  pH + pOH = 14" },
+          { name: "Henderson-Hasselbalch Equation", formula: "pH = pKa + log([Salt] / [Acid])" },
+          { name: "Arrhenius Rate Equation", formula: "k = A e^(-Ea / RT)" }
+        ]
+      },
+
+      // CHEMISTRY 2ND PAPER
+      {
+        subject: "Chemistry", paper: "2nd", chapter: "Chapter 1: Environmental Chemistry",
+        formulas: [
+          { name: "Boyle & Charles Combined", formula: "(P1 V1) / T1 = (P2 V2) / T2" },
+          { name: "Dalton's Partial Pressure", formula: "P_i = P_total × X_i (Mole fraction)" },
+          { name: "Graham's Law of Diffusion", formula: "r1 / r2 = √(M2 / M1) = √(d2 / d1)" }
+        ]
+      },
+      {
+        subject: "Chemistry", paper: "2nd", chapter: "Chapter 3: Quantitative Chemistry",
+        formulas: [
+          { name: "Molarity Equation", formula: "S = (1000 × w) / (M × V_mL)" },
+          { name: "Neutralization Titration", formula: "V1 S1 e1 = V2 S2 e2" },
+          { name: "Beer-Lambert Law", formula: "A = ε c l" }
+        ]
+      },
+      {
+        subject: "Chemistry", paper: "2nd", chapter: "Chapter 4: Electrochemistry",
+        formulas: [
+          { name: "Faraday's First Law", formula: "W = Z Q = Z I t" },
+          { name: "Nernst Equation", formula: "E_cell = E°_cell - (0.0591 / n) log(Q)" },
+          { name: "Standard Cell EMF", formula: "E°_cell = E°_cathode - E°_anode" }
+        ]
+      },
+
+      // HIGHER MATH 1ST PAPER
+      {
+        subject: "Math", paper: "1st", chapter: "Chapter 1: Matrix & Determinants",
+        formulas: [
+          { name: "Determinant 2x2", formula: "|A| = ad - bc" },
+          { name: "Inverse Matrix", formula: "A^(-1) = (1 / |A|) · adj(A)" },
+          { name: "Cramer's Rule", formula: "x = Dx/D,  y = Dy/D,  z = Dz/D" }
+        ]
+      },
+      {
+        subject: "Math", paper: "1st", chapter: "Chapter 3: Straight Lines",
+        formulas: [
+          { name: "Distance Formula", formula: "d = √((x2 - x1)² + (y2 - y1)²)" },
+          { name: "Slope-Intercept Form", formula: "y = mx + c,  m = tan θ = (y2-y1)/(x2-x1)" },
+          { name: "Perpendicular Distance", formula: "p = |a x1 + b y1 + c| / √(a² + b²)" },
+          { name: "Angle Between Two Lines", formula: "tan θ = ± (m1 - m2) / (1 + m1 m2)" }
+        ]
+      },
+      {
+        subject: "Math", paper: "1st", chapter: "Chapter 7: Trigonometric Ratios",
+        formulas: [
+          { name: "Compound Angles", formula: "sin(A±B) = sinA cosB ± cosA sinB" },
+          { name: "Double Angle Formulas", formula: "sin 2A = 2 sinA cosA,  cos 2A = cos²A - sin²A" },
+          { name: "Transformation Formulas", formula: "sin C + sin D = 2 sin((C+D)/2) cos((C-D)/2)" },
+          { name: "Sine & Cosine Rules", formula: "a / sin A = b / sin B = c / sin C = 2R" }
+        ]
+      },
+      {
+        subject: "Math", paper: "1st", chapter: "Chapter 9: Differential Calculus",
+        formulas: [
+          { name: "Power & Exponential Derivatives", formula: "d/dx(x^n) = n x^(n-1),  d/dx(e^x) = e^x" },
+          { name: "Trig Derivatives", formula: "d/dx(sin x) = cos x,  d/dx(cos x) = -sin x" },
+          { name: "Product & Quotient Rule", formula: "d/dx(uv) = u v' + v u',  d/dx(u/v) = (v u' - u v') / v²" }
+        ]
+      },
+      {
+        subject: "Math", paper: "1st", chapter: "Chapter 10: Integral Calculus",
+        formulas: [
+          { name: "Standard Integrals", formula: "∫ x^n dx = (x^(n+1)/(n+1)) + C,  ∫ (1/x) dx = ln|x| + C" },
+          { name: "Trig Integrals", formula: "∫ sin x dx = -cos x + C,  ∫ cos x dx = sin x + C" },
+          { name: "Integration by Parts", formula: "∫ u v dx = u ∫ v dx - ∫ [ (du/dx) ∫ v dx ] dx" }
+        ]
+      },
+
+      // HIGHER MATH 2ND PAPER
+      {
+        subject: "Math", paper: "2nd", chapter: "Chapter 2: Linear Programming",
+        formulas: [
+          { name: "Objective Function", formula: "Maximize / Minimize: Z = ax + by" },
+          { name: "Feasible Region", formula: "System of inequalities x ≥ 0, y ≥ 0" }
+        ]
+      },
+      {
+        subject: "Math", paper: "2nd", chapter: "Chapter 4: Polynomial Equations",
+        formulas: [
+          { name: "Quadratic Equation Roots", formula: "x = (-b ± √(b² - 4ac)) / (2a)" },
+          { name: "Sum & Product of Roots", formula: "α + β = -b/a,  α β = c/a" },
+          { name: "Discriminant Nature", formula: "D = b² - 4ac  (D>0 real, D=0 equal, D<0 complex)" }
+        ]
+      },
+      {
+        subject: "Math", paper: "2nd", chapter: "Chapter 6: Conics (Parabola, Ellipse, Hyperbola)",
+        formulas: [
+          { name: "Parabola (y² = 4ax)", formula: "Focus: (a, 0), Directrix: x = -a, Latus Rectum = 4a" },
+          { name: "Ellipse (x²/a² + y²/b² = 1)", formula: "Eccentricity e = √(1 - b²/a²) < 1" },
+          { name: "Hyperbola (x²/a² - y²/b² = 1)", formula: "Eccentricity e = √(1 + b²/a²) > 1" }
+        ]
+      },
+      {
+        subject: "Math", paper: "2nd", chapter: "Chapter 8: Statics",
+        formulas: [
+          { name: "Lami's Theorem", formula: "P / sin α = Q / sin β = R / sin γ" },
+          { name: "Parallel Forces", formula: "P · AC = Q · BC" },
+          { name: "Friction Principle", formula: "F_max = μ R,  tan λ = μ" }
+        ]
+      }
+    ];
+
+    let currentFormulaSubject = 'all';
+    let currentFormulaPaper = 'all';
+
+    function setFormulaSubject(sub) {
+      currentFormulaSubject = sub;
+      document.querySelectorAll('.fsub-btn').forEach(btn => {
+        btn.className = 'fsub-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300';
+      });
+      const activeBtn = document.getElementById('fsub-' + sub);
+      if (activeBtn) activeBtn.className = 'fsub-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 text-white';
+      renderFormulas();
+    }
+
+    function setFormulaPaper(paper) {
+      currentFormulaPaper = paper;
+      document.querySelectorAll('.fpaper-btn').forEach(btn => {
+        btn.className = 'fpaper-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300';
+      });
+      const activeBtn = document.getElementById('fpaper-' + paper);
+      if (activeBtn) activeBtn.className = 'fpaper-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 text-white';
+      renderFormulas();
+    }
+
+    function renderFormulas() {
+      const container = document.getElementById('formula-container');
+      if (!container) return;
+
+      const query = (document.getElementById('formula-search')?.value || '').toLowerCase();
+
+      const filtered = formulaData.filter(item => {
+        const matchSubject = currentFormulaSubject === 'all' || item.subject === currentFormulaSubject;
+        const matchPaper = currentFormulaPaper === 'all' || item.paper === currentFormulaPaper;
+        
+        const matchQuery = !query || 
+          item.subject.toLowerCase().includes(query) ||
+          item.chapter.toLowerCase().includes(query) ||
+          item.formulas.some(f => f.name.toLowerCase().includes(query) || f.formula.toLowerCase().includes(query));
+
+        return matchSubject && matchPaper && matchQuery;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 text-slate-400 space-y-2">
+            <i class="fa-solid fa-calculator text-3xl"></i>
+            <p class="text-xs font-medium">No formulas found matching your filter or search query.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(group => `
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2.5">
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase ${
+                group.subject === 'Physics' ? 'bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300' :
+                group.subject === 'Chemistry' ? 'bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300' :
+                'bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300'
+              }">
+                ${group.subject} (${group.paper} Paper)
+              </span>
+              <h3 class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white">${group.chapter}</h3>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+            ${group.formulas.map(f => `
+              <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-between gap-2">
+                <div>
+                  <span class="block text-[11px] font-bold text-slate-700 dark:text-slate-300">${f.name}</span>
+                  <span class="block text-xs font-mono font-black text-indigo-600 dark:text-indigo-400 mt-0.5">${f.formula}</span>
+                </div>
+                <button onclick="navigator.clipboard.writeText('${f.formula.replace(/'/g, "\\'")}')" class="p-1.5 rounded-lg text-slate-400 hover:text-indigo-500 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors shrink-0" title="Copy Formula">
+                  <i class="fa-solid fa-copy text-xs"></i>
+                </button>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // NOTES DATA
     const notesData = [
       {
         id: 1,
-        title: "ICT Chapter 3 Full Note",
+        title: "ICT Chapter 3: Digital Devices & Number System",
         subject: "ICT",
-        paper: "Both (1st & 2nd)",
-        description: "Complete note on Chapter 3 covering Number Systems and Digital Devices.",
-        url: "https://drive.google.com/file/d/1GjAZ6mWZtR89M6H1sHnXBcbPTewxrH2i/view"
-      }
-    ];
-
-    const scienceRoutine = [
-      { day: "Sunday", p1: "English", p2: "Chemistry", p3: "-", p4: "-", p5: "-", p6: "-" },
-      { day: "Monday", p1: "English", p2: "Higher Math", p3: "-", p4: "-", p5: "-", p6: "-" },
-      { day: "Tuesday", p1: "Bangla", p2: "Higher Math", p3: "-", p4: "-", p5: "-", p6: "-" },
-      { day: "Wednesday", p1: "ICT", p2: "English", p3: "-", p4: "-", p5: "-", p6: "-" },
-      { day: "Thursday", p1: "Bangla", p2: "Physics", p3: "-", p4: "-", p5: "-", p6: "-" }
-    ];
-
-    const businessRoutine = [
-      { day: "Sunday", p1: "English", p2: "Marketing / Social Work", p3: "-", p4: "-", p5: "-", p6: "-" },
-      { day: "Monday", p1: "English", p2: "Agri (A+B)", p3: "-", p4: "-", p5: "-", p6: "-" },
-      { day: "Tuesday", p1: "Bangla", p2: "Management / Social Work", p3: "-", p4: "-", p5: "-", p6: "-" },
-      { day: "Wednesday", p1: "ICT", p2: "English", p3: "-", p4: "-", p5: "-", p6: "-" },
-      { day: "Thursday", p1: "Bangla", p2: "Agri (A+B)", p3: "-", p4: "-", p5: "-", p6: "-" }
-    ];
-
-    const humanitiesRoutine = [
-      { day: "Sunday", p1: "English", p2: "Social Work", p3: "-", p4: "-", p5: "-", p6: "-" },
-      { day: "Monday", p1: "English", p2: "Agri (A+B)", p3: "-", p4: "-", p5: "-", p6: "-" },
-      { day: "Tuesday", p1: "Bangla", p2: "Social Work", p3: "-", p4: "-", p5: "-", p6: "-" },
-      { day: "Wednesday", p1: "ICT", p2: "English", p3: "-", p4: "-", p5: "-", p6: "-" },
-      { day: "Thursday", p1: "Bangla", p2: "Agri (A+B)", p3: "-", p4: "-", p5: "-", p6: "-" }
-    ];
-
-    const questionItems = [
+        paper: "1st Paper",
+        date: "2026-10-15",
+        author: "Md. Ashiqul Islam Ashik",
+        fileUrl: "https://drive.google.com/file/d/1_ExampleICTChapter3/view?usp=sharing",
+        embedUrl: "https://drive.google.com/file/d/1_ExampleICTChapter3/preview",
+        description: "Comprehensive notes covering binary, octal, hex conversions, logic gates, and Boolean algebra simplification."
+      },
       {
-        id: 1,
-        title: "Class Routine Schedule Photo",
-        subject: "Routine Photo",
-        date: "2026",
-        url: "https://drive.google.com/file/d/1GjAZ6mWZtR89M6H1sHnXBcbPTewxrH2i/view"
-      }
-    ];
-
-    const announcementItems = [
+        id: 2,
+        title: "Physics 1st Paper: Vector & Kinematics",
+        subject: "Physics",
+        paper: "1st Paper",
+        date: "2026-10-10",
+        author: "Md. Ashiqul Islam Ashik",
+        fileUrl: "https://drive.google.com/file/d/1_ExamplePhysicsVector/view?usp=sharing",
+        embedUrl: "https://drive.google.com/file/d/1_ExamplePhysicsVector/preview",
+        description: "Dot product, cross product, calculus applications, projectile motion equations, and worked mathematical problems."
+      },
       {
-        id: 1,
-        title: "Pre-Test Examination Target Announced",
-        category: "Exam",
-        date: "November 26, 2026",
-        content: "The exam date for the Pre-Test Examination has been officially revealed. Exams will commence on **November 26, 2026**. Detailed routine and subject syllabus will be updated soon."
+        id: 3,
+        title: "Chemistry 1st Paper: Qualitative Chemistry",
+        subject: "Chemistry",
+        paper: "1st Paper",
+        date: "2026-10-05",
+        author: "Md. Ashiqul Islam Ashik",
+        fileUrl: "https://drive.google.com/file/d/1_ExampleChemQualitative/view?usp=sharing",
+        embedUrl: "https://drive.google.com/file/d/1_ExampleChemQualitative/preview",
+        description: "Bohr atomic model, quantum numbers, solubility product (Ksp), and cation/anion detection tests."
+      },
+      {
+        id: 4,
+        title: "Higher Math 1st Paper: Matrix & Determinants",
+        subject: "Math",
+        paper: "1st Paper",
+        date: "2026-09-28",
+        author: "Md. Ashiqul Islam Ashik",
+        fileUrl: "https://drive.google.com/file/d/1_ExampleMathMatrix/view?usp=sharing",
+        embedUrl: "https://drive.google.com/file/d/1_ExampleMathMatrix/preview",
+        description: "Types of matrices, inverse matrix calculation using adjugate method, and Cramer's Rule for system of linear equations."
       }
     ];
 
-    let currentScale = 1;
-    let currentRotation = 0;
-    let panX = 0;
-    let panY = 0;
-    let isDragging = false;
-    let startX = 0;
-    let startY = 0;
-    let touchDistStart = 0;
-    let lastTapTime = 0;
+    let currentSubjectFilter = 'all';
+    let currentPaperFilter = 'all';
 
-    // THEME & VIEW MANAGEMENT
-    function initTheme() {
-      const isDark = localStorage.getItem('theme') === 'dark' || 
-        (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
-      if (isDark) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    }
-
-    function toggleTheme() {
-      const isDark = document.documentElement.classList.toggle('dark');
-      localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    }
-
-    function switchView(viewId) {
-      document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
-      const activeView = document.getElementById('view-' + viewId);
-      if (activeView) activeView.classList.remove('hidden');
-
-      // Update Desktop Nav Buttons
-      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-      const navBtn = document.getElementById('nav-' + viewId);
-      if (navBtn) navBtn.classList.add('active');
-
-      // Update Mobile Floating Dock Buttons
-      document.querySelectorAll('.mob-nav-btn').forEach(btn => btn.classList.remove('active'));
-      const mobNavBtn = document.getElementById('mob-nav-' + viewId);
-      if (mobNavBtn) mobNavBtn.classList.add('active');
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // RENDER FUNCTIONS
     function filterNotes(subject) {
+      currentSubjectFilter = subject;
       document.querySelectorAll('.note-filter-btn').forEach(btn => {
-        btn.className = 'note-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300';
+        btn.className = 'note-filter-btn px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 active:scale-95 transition-transform';
       });
       const activeBtn = document.getElementById('filter-subject-' + subject);
-      if (activeBtn) activeBtn.className = 'note-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold bg-blue-600 text-white';
-
-      renderNotes(subject, 'all');
+      if (activeBtn) activeBtn.className = 'note-filter-btn px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-bold bg-blue-600 text-white active:scale-95 transition-transform';
+      renderNotes();
     }
 
     function filterNotesPaper(paper) {
-      renderNotes('all', paper);
+      if (currentPaperFilter === paper) {
+        currentPaperFilter = 'all';
+      } else {
+        currentPaperFilter = paper;
+      }
+      document.querySelectorAll('.note-paper-btn').forEach(btn => {
+        btn.className = 'note-paper-btn px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 active:scale-95 transition-transform';
+      });
+      if (currentPaperFilter !== 'all') {
+        const activeBtnId = paper === '1st Paper' ? 'filter-paper-1st' : 'filter-paper-2nd';
+        const activeBtn = document.getElementById(activeBtnId);
+        if (activeBtn) activeBtn.className = 'note-paper-btn px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-bold bg-indigo-600 text-white active:scale-95 transition-transform';
+      }
+      renderNotes();
     }
 
-    function renderNotes(subjectFilter = 'all', paperFilter = 'all') {
+    function renderNotes() {
       const container = document.getElementById('notes-grid');
       if (!container) return;
 
-      const filtered = notesData.filter(item => {
-        const matchSubject = subjectFilter === 'all' || item.subject === subjectFilter;
-        const matchPaper = paperFilter === 'all' || item.paper.includes(paperFilter) || item.paper.includes('Both');
+      const filtered = notesData.filter(note => {
+        const matchSubject = currentSubjectFilter === 'all' || note.subject === currentSubjectFilter;
+        const matchPaper = currentPaperFilter === 'all' || note.paper === currentPaperFilter;
         return matchSubject && matchPaper;
       });
 
       if (filtered.length === 0) {
         container.innerHTML = `
-          <div class="col-span-full text-center py-12 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 text-slate-400">
-            <i class="fa-solid fa-folder-open text-3xl mb-2"></i>
-            <p class="text-xs font-medium">No notes available for this selection.</p>
+          <div class="col-span-full text-center py-12 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 text-slate-400 space-y-2">
+            <i class="fa-solid fa-book-open text-3xl"></i>
+            <p class="text-xs font-medium">No notes available for the selected filters.</p>
           </div>
         `;
         return;
       }
 
-      container.innerHTML = filtered.map(item => `
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm hover:shadow-md transition-all space-y-4 flex flex-col justify-between">
-          <div class="space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300">
-                ${item.subject}
+      container.innerHTML = filtered.map(note => `
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm space-y-3.5 hover:shadow-md transition-all flex flex-col justify-between card-elevate">
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between gap-2">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300">
+                ${note.subject} · ${note.paper}
               </span>
-              <span class="text-[10px] text-slate-400 font-bold">${item.paper}</span>
+              <span class="text-[10px] text-slate-400 font-medium">${note.date}</span>
             </div>
-            <h3 class="text-sm font-bold text-slate-900 dark:text-white leading-snug">${item.title}</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2">${item.description}</p>
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white leading-snug">${note.title}</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">${note.description}</p>
           </div>
-
-          <button onclick="openPdfModal('${item.title}', '${item.url}')" class="w-full py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors flex items-center justify-center gap-2">
-            <i class="fa-solid fa-file-pdf"></i> Read Note in Reader
-          </button>
+          <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-2">
+            <span class="text-[10px] text-slate-400">By ${note.author}</span>
+            <div class="flex items-center gap-2">
+              <button onclick="openPdfModal('${note.title.replace(/'/g, "\\'")}', '${note.embedUrl}', '${note.fileUrl}')" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center gap-1.5 transition-colors">
+                <i class="fa-solid fa-file-pdf"></i> Read Note
+              </button>
+            </div>
+          </div>
         </div>
       `).join('');
     }
+
+    // ROUTINE DATA
+    const routineData = {
+      science: [
+        { day: "Sunday", periods: ["Physics (1st)", "Chemistry (1st)", "Higher Math (1st)", "ICT", "English"] },
+        { day: "Monday", periods: ["Chemistry (1st)", "Physics (1st)", "Bangla", "Higher Math (1st)", "Physics Lab"] },
+        { day: "Tuesday", periods: ["Higher Math (1st)", "ICT", "Chemistry (1st)", "English", "Chemistry Lab"] },
+        { day: "Wednesday", periods: ["Physics (1st)", "Bangla", "Chemistry (1st)", "Higher Math (1st)", "ICT Lab"] },
+        { day: "Thursday", periods: ["English", "Bangla", "Physics (1st)", "Chemistry (1st)", "Club Activities"] }
+      ],
+      business: [
+        { day: "Sunday", periods: ["Accounting", "Business Org", "Economics", "ICT", "English"] },
+        { day: "Monday", periods: ["Business Org", "Accounting", "Bangla", "Finance", "English"] },
+        { day: "Tuesday", periods: ["Economics", "ICT", "Accounting", "English", "Finance"] },
+        { day: "Wednesday", periods: ["Finance", "Bangla", "Business Org", "Economics", "ICT Lab"] },
+        { day: "Thursday", periods: ["English", "Bangla", "Accounting", "Finance", "Club Activities"] }
+      ],
+      humanities: [
+        { day: "Sunday", periods: ["Civics", "History", "Economics", "ICT", "English"] },
+        { day: "Monday", periods: ["History", "Civics", "Bangla", "Logic", "English"] },
+        { day: "Tuesday", periods: ["Economics", "ICT", "History", "English", "Logic"] },
+        { day: "Wednesday", periods: ["Logic", "Bangla", "Civics", "Economics", "ICT Lab"] },
+        { day: "Thursday", periods: ["English", "Bangla", "History", "Civics", "Club Activities"] }
+      ],
+      exam: [
+        { day: "Nov 26, 2026", periods: ["Pre-Test: Physics 1st Paper / Accounting / Civics (09:00 AM - 12:00 PM)"] },
+        { day: "Nov 29, 2026", periods: ["Pre-Test: Chemistry 1st Paper / Business Org / History (09:00 AM - 12:00 PM)"] },
+        { day: "Dec 02, 2026", periods: ["Pre-Test: Higher Math 1st Paper / Finance / Economics (09:00 AM - 12:00 PM)"] },
+        { day: "Dec 06, 2026", periods: ["Pre-Test: ICT (09:00 AM - 12:00 PM)"] }
+      ]
+    };
+
+    let currentRoutineGroup = 'science';
+
+    function switchRoutineGroup(group) {
+      currentRoutineGroup = group;
+      ['science', 'business', 'humanities', 'exam'].forEach(g => {
+        const btn = document.getElementById('grp-btn-' + g);
+        if (btn) {
+          if (g === group) {
+            btn.className = 'px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold transition-all bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm active:scale-95';
+          } else {
+            btn.className = 'px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold transition-all text-slate-600 dark:text-slate-400 active:scale-95';
+          }
+        }
+      });
+      renderClassRoutine();
+    }
+
+    function renderClassRoutine() {
+      const container = document.getElementById('routine-container');
+      if (!container) return;
+
+      const schedule = routineData[currentRoutineGroup] || [];
+
+      container.innerHTML = schedule.map(item => `
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-4 sm:p-5 shadow-sm space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-2">
+            <h3 class="text-xs sm:text-sm font-extrabold text-blue-600 dark:text-blue-400 flex items-center gap-2">
+              <i class="fa-solid fa-calendar-day"></i> ${item.day}
+            </h3>
+            <span class="text-[10px] text-slate-400 font-semibold">${item.periods.length} Session(s)</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2">
+            ${item.periods.map((p, idx) => `
+              <div class="p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 space-y-1">
+                <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">Period ${idx + 1}</span>
+                <p class="text-xs font-bold text-slate-800 dark:text-slate-200">${p}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // QUESTIONS & VAULT DATA
+    const questionsData = [
+      {
+        title: "Class Routine Schedule Sheet 2026",
+        category: "Routine Photo",
+        imageUrl: "https://drive.google.com/thumbnail?id=1_ExampleRoutineImage&sz=w1000",
+        originalUrl: "https://drive.google.com/file/d/1_ExampleRoutineImage/view?usp=sharing"
+      },
+      {
+        title: "Physics 1st Paper Term Exam Question 2026",
+        category: "Question Paper",
+        imageUrl: "https://drive.google.com/thumbnail?id=1_ExamplePhysicsQuestion&sz=w1000",
+        originalUrl: "https://drive.google.com/file/d/1_ExamplePhysicsQuestion/view?usp=sharing"
+      },
+      {
+        title: "ICT Mid-Term Question Paper 2026",
+        category: "Question Paper",
+        imageUrl: "https://drive.google.com/thumbnail?id=1_ExampleICTQuestion&sz=w1000",
+        originalUrl: "https://drive.google.com/file/d/1_ExampleICTQuestion/view?usp=sharing"
+      }
+    ];
 
     function renderQuestions() {
       const container = document.getElementById('questions-grid');
       if (!container) return;
 
-      if (questionItems.length === 0) {
-        container.innerHTML = `
-          <div class="col-span-full text-center py-12 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 text-slate-400">
-            <i class="fa-solid fa-folder-open text-3xl mb-2"></i>
-            <p class="text-xs font-medium">No resources or photos in the vault yet.</p>
+      container.innerHTML = questionsData.map(item => `
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-4 shadow-sm space-y-3 flex flex-col justify-between card-elevate">
+          <div class="space-y-2">
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300">
+              ${item.category}
+            </span>
+            <h3 class="text-xs sm:text-sm font-extrabold text-slate-900 dark:text-white leading-snug">${item.title}</h3>
           </div>
-        `;
-        return;
-      }
-
-      container.innerHTML = questionItems.map(item => {
-        const fileIdMatch = item.url.match(/\/d\/([^\/]+)/);
-        const thumbUrl = (fileIdMatch && fileIdMatch[1])
-          ? `https://drive.google.com/thumbnail?id=${fileIdMatch[1]}&sz=w600`
-          : item.url;
-
-        return `
-          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-4 shadow-sm hover:shadow-md transition-all space-y-3 flex flex-col justify-between group">
-            <div class="space-y-2">
-              <div class="relative w-full h-36 bg-slate-100 dark:bg-slate-800 rounded-2xl overflow-hidden cursor-pointer" onclick="openQuestionModal('${item.title}', '${item.url}')">
-                <img src="${thumbUrl}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.src='https://placehold.co/600x400/1e293b/ffffff?text=Document+Preview';">
-                <div class="absolute inset-0 bg-slate-950/20 group-hover:bg-slate-950/40 transition-colors flex items-center justify-center">
-                  <span class="w-9 h-9 rounded-full bg-white/90 dark:bg-slate-900/90 text-purple-600 dark:text-purple-400 flex items-center justify-center shadow-lg text-sm">
-                    <i class="fa-solid fa-expand"></i>
-                  </span>
-                </div>
-              </div>
-
-              <div class="flex items-center justify-between pt-1">
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-purple-100 dark:bg-purple-950/80 text-purple-700 dark:text-purple-300">
-                  ${item.subject}
-                </span>
-                <span class="text-[10px] text-slate-400 font-bold">${item.date}</span>
-              </div>
-              <h3 class="text-xs font-bold text-slate-900 dark:text-white leading-snug">${item.title}</h3>
-            </div>
-
-            <button onclick="openQuestionModal('${item.title}', '${item.url}')" class="w-full py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition-colors flex items-center justify-center gap-2">
-              <i class="fa-solid fa-eye"></i> Full Screen Preview
+          <div class="relative rounded-2xl overflow-hidden group border border-slate-100 dark:border-slate-800 bg-slate-950/20 aspect-video flex items-center justify-center">
+            <img src="${item.imageUrl}" alt="${item.title}" class="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300" onerror="this.src='https://placehold.co/600x400/1e293b/64748b?text=Resource+Preview'">
+            <button onclick="openQuestionModal('${item.title.replace(/'/g, "\\'")}', '${item.imageUrl}', '${item.originalUrl}')" class="absolute inset-0 bg-slate-950/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-bold gap-1.5">
+              <i class="fa-solid fa-expand text-base"></i> Preview Vault Item
             </button>
           </div>
-        `;
-      }).join('');
-    }
-
-    function switchRoutineGroup(group) {
-      ['science', 'business', 'humanities', 'exam'].forEach(g => {
-        const btn = document.getElementById('grp-btn-' + g);
-        if (btn) {
-          if (g === group) {
-            btn.className = 'px-3.5 py-2 rounded-xl text-xs font-bold transition-all bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm';
-          } else {
-            btn.className = 'px-3.5 py-2 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-400';
-          }
-        }
-      });
-      renderClassRoutine(group);
-    }
-
-    function renderClassRoutine(group) {
-      const container = document.getElementById('routine-container');
-      if (!container) return;
-
-      if (group === 'exam') {
-        container.innerHTML = `
-          <div class="p-8 text-center bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 space-y-3">
-            <div class="w-12 h-12 mx-auto rounded-2xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center text-2xl font-bold">
-              <i class="fa-solid fa-clock"></i>
-            </div>
-            <h3 class="text-base font-bold text-slate-900 dark:text-white">Exam Routine Coming Soon</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">The Pre-Test exam routine for November 26, 2026 will be published here as soon as official dates are finalized.</p>
-          </div>
-        `;
-        return;
-      }
-
-      let routineList = scienceRoutine;
-      if (group === 'business') routineList = businessRoutine;
-      if (group === 'humanities') routineList = humanitiesRoutine;
-
-      container.innerHTML = `
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm space-y-4">
-          <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
-            <h3 class="text-base font-black text-slate-900 dark:text-white flex items-center gap-2 capitalize">
-              <i class="fa-solid fa-calendar-week text-teal-500"></i> ${group} Weekly Timetable
-            </h3>
-            <span class="text-xs font-bold text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/60 px-3 py-1 rounded-full border border-teal-200 dark:border-teal-800">
-              6 Periods / Day
-            </span>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse min-w-[650px]">
-              <thead>
-                <tr class="border-b border-slate-200 dark:border-slate-800 text-[11px] font-extrabold uppercase text-slate-400 dark:text-slate-500">
-                  <th class="py-3 px-3 w-28">Day</th>
-                  <th class="py-3 px-2 text-center">
-                    <div>Period 1</div>
-                    <div class="text-[9px] font-normal tracking-normal text-slate-400 dark:text-slate-500 lowercase mt-0.5">10:00 - 10:40</div>
-                  </th>
-                  <th class="py-3 px-2 text-center">
-                    <div>Period 2</div>
-                    <div class="text-[9px] font-normal tracking-normal text-slate-400 dark:text-slate-500 lowercase mt-0.5">10:40 - 11:20</div>
-                  </th>
-                  <th class="py-3 px-2 text-center">
-                    <div>Period 3</div>
-                    <div class="text-[9px] font-normal tracking-normal text-slate-400 dark:text-slate-500 lowercase mt-0.5">11:20 - 12:00</div>
-                  </th>
-                  <th class="py-3 px-2 text-center">
-                    <div>Period 4</div>
-                    <div class="text-[9px] font-normal tracking-normal text-slate-400 dark:text-slate-500 lowercase mt-0.5">12:00 - 12:40</div>
-                  </th>
-                  <th class="py-3 px-2 text-center bg-amber-500/10 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-lg">
-                    <div>Break</div>
-                    <div class="text-[9px] font-semibold tracking-normal lowercase mt-0.5">12:40 - 1:00</div>
-                  </th>
-                  <th class="py-3 px-2 text-center">
-                    <div>Period 5</div>
-                    <div class="text-[9px] font-normal tracking-normal text-slate-400 dark:text-slate-500 lowercase mt-0.5">1:00 - 1:40</div>
-                  </th>
-                  <th class="py-3 px-2 text-center">
-                    <div>Period 6</div>
-                    <div class="text-[9px] font-normal tracking-normal text-slate-400 dark:text-slate-500 lowercase mt-0.5">1:40 - 2:20</div>
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60 text-xs">
-                ${routineList.map(r => `
-                  <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors">
-                    <td class="py-3.5 px-3 font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-                      <span class="w-2 h-2 rounded-full bg-teal-500"></span>
-                      ${r.day}
-                    </td>
-                    ${[r.p1, r.p2, r.p3, r.p4].map(p => {
-                      const isFree = p.includes('[Study') || p.includes('Free');
-                      return `
-                        <td class="py-3.5 px-2 text-center font-bold ${isFree ? 'text-slate-400 dark:text-slate-600 italic' : 'text-blue-600 dark:text-blue-400'}">
-                          ${p}
-                        </td>
-                      `;
-                    }).join('')}
-                    
-                    <!-- Break / Tiffin Column -->
-                    <td class="py-3.5 px-2 text-center font-extrabold text-amber-600 dark:text-amber-400 bg-amber-500/5 dark:bg-amber-500/5">
-                      <span class="px-2 py-0.5 rounded-full text-[10px] bg-amber-500/15 border border-amber-500/20">
-                        <i class="fa-solid fa-utensils text-[9px] mr-1"></i>Tiffin
-                      </span>
-                    </td>
-
-                    ${[r.p5, r.p6].map(p => {
-                      const isFree = p.includes('[Study') || p.includes('Free');
-                      return `
-                        <td class="py-3.5 px-2 text-center font-bold ${isFree ? 'text-slate-400 dark:text-slate-600 italic' : 'text-blue-600 dark:text-blue-400'}">
-                          ${p}
-                        </td>
-                      `;
-                    }).join('')}
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
+          <button onclick="openQuestionModal('${item.title.replace(/'/g, "\\'")}', '${item.imageUrl}', '${item.originalUrl}')" class="w-full py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors">
+            <i class="fa-solid fa-eye"></i> View Fullscreen
+          </button>
         </div>
-      `;
+      `).join('');
     }
+
+    // NOTICES DATA
+    const noticesData = [
+      {
+        title: "Official Schedule for Pre-Test Examination 2026",
+        date: "2026-10-20",
+        badge: "Exam Notice",
+        content: `
+          <p>Dear students of Class XI & XII,</p>
+          <p>The Pre-Test Examination 2026 is scheduled to commence on <strong>November 26, 2026</strong>. All students are advised to clear outstanding tuition fees and collect admit cards from the administrative section before November 20.</p>
+          <p>Routine details are available in the Class Routine tab.</p>
+        `
+      },
+      {
+        title: "College Library Extended Hours during Revision Week",
+        date: "2026-10-12",
+        badge: "General Notice",
+        content: `
+          <p>To support exam preparation, the central library will remain open until 06:00 PM on weekdays starting next week.</p>
+        `
+      }
+    ];
 
     function renderNotices() {
       const container = document.getElementById('notices-list');
       if (!container) return;
 
-      container.innerHTML = announcementItems.map(item => `
-        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm space-y-3">
-          <div class="flex items-center justify-between">
-            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300">
-              ${item.category}
-            </span>
-            <span class="text-[10px] text-slate-400 font-bold">${item.date}</span>
+      container.innerHTML = noticesData.map((item, idx) => `
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm space-y-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 card-elevate">
+          <div class="space-y-1.5 max-w-2xl">
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-100 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300">
+                ${item.badge}
+              </span>
+              <span class="text-[10px] text-slate-400 font-semibold">${item.date}</span>
+            </div>
+            <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">${item.title}</h3>
           </div>
-          <h3 class="text-sm font-bold text-slate-900 dark:text-white">${item.title}</h3>
-          <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">${item.content}</p>
+          <button onclick="openNoticeModal('${item.title.replace(/'/g, "\\'")}', ${idx})" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold shrink-0 transition-colors">
+            Read Notice <i class="fa-solid fa-arrow-right text-[10px] ml-1"></i>
+          </button>
         </div>
       `).join('');
     }
 
-    // MODALS & PREVIEWS
-    function openPdfModal(title, url) {
-      document.getElementById('pdf-modal-title').innerText = title;
-      const embedUrl = url.includes('drive.google.com') 
-        ? url.replace('/view?usp=drive_link', '/preview').replace('/view', '/preview')
-        : url;
-      document.getElementById('pdf-frame').src = embedUrl;
-      document.getElementById('pdf-download-btn').href = url;
-      document.getElementById('pdf-modal').classList.remove('hidden');
-    }
-
-    function closePdfModal() {
-      document.getElementById('pdf-modal').classList.add('hidden');
-      document.getElementById('pdf-frame').src = '';
-    }
-
-    function openQuestionModal(title, url) {
-      document.getElementById('qmodal-title').innerText = title;
-      document.getElementById('qmodal-download-btn').href = url;
-      
-      const img = document.getElementById('qmodal-img');
-      const fileIdMatch = url.match(/\/d\/([^\/]+)/);
-      if (fileIdMatch && fileIdMatch[1]) {
-        img.src = `https://drive.google.com/thumbnail?id=${fileIdMatch[1]}&sz=w1200`;
-      } else {
-        img.src = url;
-      }
-
-      resetQuestionImage();
-      document.getElementById('question-modal').classList.remove('hidden');
-    }
-
-    function closeQuestionModal() {
-      document.getElementById('question-modal').classList.add('hidden');
+    function openNoticeModal(title, index) {
+      const item = noticesData[index];
+      if (!item) return;
+      document.getElementById('notice-modal-title').innerText = item.title;
+      document.getElementById('notice-modal-content').innerHTML = item.content;
+      document.getElementById('notice-modal').classList.remove('hidden');
     }
 
     function closeNoticeModal() {
       document.getElementById('notice-modal').classList.add('hidden');
     }
 
-    function zoomQuestionImage(factor) {
-      currentScale = Math.min(Math.max(0.5, currentScale * factor), 5);
-      updateImageTransform();
-    }
-
-    function rotateQuestionImage(deg) {
-      currentRotation = (currentRotation + deg) % 360;
-      updateImageTransform();
-    }
-
-    function resetQuestionImage() {
-      currentScale = 1;
-      currentRotation = 0;
-      panX = 0;
-      panY = 0;
-      updateImageTransform();
-    }
-
-    function updateImageTransform() {
-      const wrapper = document.getElementById('qmodal-image-wrapper');
-      if (wrapper) {
-        wrapper.style.transform = `translate(${panX}px, ${panY}px) scale(${currentScale}) rotate(${currentRotation}deg)`;
+    // THEME CONTROLLER
+    function initTheme() {
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        updateThemeIcons(true);
+      } else {
+        document.documentElement.classList.remove('dark');
+        updateThemeIcons(false);
       }
     }
 
-    // COUNTDOWN & UTILITIES
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.theme = isDark ? 'dark' : 'light';
+      updateThemeIcons(isDark);
+    }
+
+    function updateThemeIcons(isDark) {
+      const iconDesktop = document.getElementById('theme-toggle-icon');
+      const iconMobile = document.getElementById('theme-toggle-icon-mobile');
+      if (iconDesktop) iconDesktop.className = isDark ? 'fa-solid fa-sun text-base text-amber-300' : 'fa-solid fa-moon text-base text-amber-400';
+      if (iconMobile) iconMobile.className = isDark ? 'fa-solid fa-sun text-sm text-amber-300' : 'fa-solid fa-moon text-sm text-amber-400';
+    }
+
+    // VIEW SWITCHER
+    function switchView(viewName) {
+      document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('hidden'));
+      const target = document.getElementById('view-' + viewName);
+      if (target) target.classList.remove('hidden');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+      const activeNav = document.getElementById('nav-' + viewName);
+      if (activeNav) activeNav.classList.add('active');
+
+      document.querySelectorAll('.mob-nav-btn').forEach(btn => btn.classList.remove('active'));
+      const activeMobNav = document.getElementById('mob-nav-' + viewName);
+      if (activeMobNav) activeMobNav.classList.add('active');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ORIENTATION TOGGLE
+    function toggleOrientationLock() {
+      document.body.classList.toggle('rotate-view-landscape');
+    }
+
+    // DISMISS ANNOUNCEMENT BAR
+    function dismissAnnouncementBar() {
+      const bar = document.getElementById('announcement-bar');
+      if (bar) bar.classList.add('hidden');
+    }
+
+    // COUNTDOWN TIMER
     function startExamCountdown() {
-      const examDate = new Date("2026-11-26T00:00:00").getTime();
+      const examDate = new Date('2026-11-26T09:00:00').getTime();
       
-      function updateTimer() {
+      function update() {
         const now = new Date().getTime();
         const diff = examDate - now;
 
         if (diff <= 0) {
-          const cdText = document.getElementById('cd-text');
-          if (cdText) cdText.innerText = "Exam Ongoing!";
+          document.getElementById('cd-days').innerText = '00';
+          document.getElementById('cd-hours').innerText = '00';
+          document.getElementById('cd-mins').innerText = '00';
+          document.getElementById('cd-secs').innerText = '00';
           return;
         }
 
@@ -1070,216 +1381,124 @@
         const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const secs = Math.floor((diff % (1000 * 60)) / 1000);
 
-        document.querySelectorAll('#cd-days').forEach(el => el.innerText = String(days).padStart(2, '0'));
-        document.querySelectorAll('#cd-hours').forEach(el => el.innerText = String(hours).padStart(2, '0'));
-        document.querySelectorAll('#cd-mins').forEach(el => el.innerText = String(mins).padStart(2, '0'));
-        document.querySelectorAll('#cd-secs').forEach(el => el.innerText = String(secs).padStart(2, '0'));
+        document.getElementById('cd-days').innerText = String(days).padStart(2, '0');
+        document.getElementById('cd-hours').innerText = String(hours).padStart(2, '0');
+        document.getElementById('cd-mins').innerText = String(mins).padStart(2, '0');
+        document.getElementById('cd-secs').innerText = String(secs).padStart(2, '0');
       }
 
-      updateTimer();
-      setInterval(updateTimer, 1000);
+      update();
+      setInterval(update, 1000);
     }
 
-    function setupOfflineListener() {
-      const banner = document.getElementById('offline-banner');
-      function checkStatus() {
-        if (!navigator.onLine) {
-          if (banner) banner.classList.remove('hidden');
-        } else {
-          if (banner) banner.classList.add('hidden');
-        }
+    // PDF MODAL CONTROLLER
+    function openPdfModal(title, embedUrl, downloadUrl) {
+      document.getElementById('pdf-modal-title').innerText = title;
+      document.getElementById('pdf-frame').src = embedUrl;
+      document.getElementById('pdf-download-btn').href = downloadUrl;
+      document.getElementById('pdf-modal').classList.remove('hidden');
+    }
+
+    function closePdfModal() {
+      document.getElementById('pdf-modal').classList.add('hidden');
+      document.getElementById('pdf-frame').src = '';
+    }
+
+    // QUESTION IMAGE MODAL CONTROLLER
+    let currentZoom = 1;
+    let currentRotation = 0;
+
+    function openQuestionModal(title, imageUrl, originalUrl) {
+      document.getElementById('qmodal-title').innerText = title;
+      document.getElementById('qmodal-img').src = imageUrl;
+      document.getElementById('qmodal-download-btn').href = originalUrl;
+      resetQuestionImage();
+      document.getElementById('question-modal').classList.remove('hidden');
+    }
+
+    function closeQuestionModal() {
+      document.getElementById('question-modal').classList.add('hidden');
+    }
+
+    function zoomQuestionImage(factor) {
+      currentZoom = Math.min(Math.max(currentZoom * factor, 0.5), 4);
+      applyQuestionTransform();
+    }
+
+    function rotateQuestionImage(deg) {
+      currentRotation = (currentRotation + deg) % 360;
+      applyQuestionTransform();
+    }
+
+    function resetQuestionImage() {
+      currentZoom = 1;
+      currentRotation = 0;
+      applyQuestionTransform();
+    }
+
+    function applyQuestionTransform() {
+      const wrapper = document.getElementById('qmodal-image-wrapper');
+      if (wrapper) {
+        wrapper.style.transform = `scale(${currentZoom}) rotate(${currentRotation}deg)`;
       }
-      window.addEventListener('online', checkStatus);
-      window.addEventListener('offline', checkStatus);
-      checkStatus();
-    }
-
-    // LOCAL STORAGE CACHING FOR OFFLINE ACCESS
-    function cacheDataLocally() {
-      try {
-        localStorage.setItem('ksc_notes_cache', JSON.stringify(notesData));
-        localStorage.setItem('ksc_routine_science', JSON.stringify(scienceRoutine));
-        localStorage.setItem('ksc_questions_cache', JSON.stringify(questionItems));
-      } catch (e) {
-        console.log('LocalStorage caching fallback active');
-      }
-    }
-
-    function dismissAnnouncementBar() {
-      const bar = document.getElementById('announcement-bar');
-      if (bar) bar.classList.add('hidden');
-    }
-
-    function setupAccessibilityShortcuts() {
-      window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-          closeQuestionModal();
-          closePdfModal();
-          closeNoticeModal();
-        }
-        const qModal = document.getElementById('question-modal');
-        if (qModal && !qModal.classList.contains('hidden')) {
-          if (e.key === '+' || e.key === '=') zoomQuestionImage(1.2);
-          if (e.key === '-') zoomQuestionImage(0.8);
-          if (e.key === 'r' || e.key === 'R') rotateQuestionImage(90);
-        }
-      });
     }
 
     function setupQuestionModalGestures() {
       const viewport = document.getElementById('qmodal-viewport');
       if (!viewport) return;
 
-      viewport.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        startX = e.clientX - panX;
-        startY = e.clientY - panY;
-      });
-
-      window.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        panX = e.clientX - startX;
-        panY = e.clientY - startY;
-        updateImageTransform();
-      });
-
-      window.addEventListener('mouseup', () => { isDragging = false; });
-
-      // TOUCH & PINCH TO ZOOM GESTURES
-      viewport.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 1) {
-          const currentTime = new Date().getTime();
-          const tapLength = currentTime - lastTapTime;
-          if (tapLength < 300 && tapLength > 0) {
-            currentScale = currentScale === 1 ? 2.2 : 1;
-            panX = 0;
-            panY = 0;
-            updateImageTransform();
-          }
-          lastTapTime = currentTime;
-
-          isDragging = true;
-          startX = e.touches[0].clientX - panX;
-          startY = e.touches[0].clientY - panY;
-        } else if (e.touches.length === 2) {
-          isDragging = false;
-          touchDistStart = Math.hypot(
-            e.touches[0].clientX - e.touches[1].clientX,
-            e.touches[0].clientY - e.touches[1].clientY
-          );
-        }
-      });
-
-      viewport.addEventListener('touchmove', (e) => {
-        if (e.touches.length === 1 && isDragging) {
-          panX = e.touches[0].clientX - startX;
-          panY = e.touches[0].clientY - startY;
-          updateImageTransform();
-        } else if (e.touches.length === 2) {
-          const dist = Math.hypot(
-            e.touches[0].clientX - e.touches[1].clientX,
-            e.touches[0].clientY - e.touches[1].clientY
-          );
-          if (touchDistStart > 0) {
-            const factor = dist / touchDistStart;
-            currentScale = Math.min(Math.max(0.5, currentScale * factor), 5);
-            updateImageTransform();
-          }
-          touchDistStart = dist;
-        }
-      });
-
-      viewport.addEventListener('touchend', () => {
-        isDragging = false;
-        touchDistStart = 0;
-      });
-
       viewport.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        const factor = e.deltaY < 0 ? 1.15 : 0.85;
-        zoomQuestionImage(factor);
+        if (e.ctrlKey || true) {
+          e.preventDefault();
+          if (e.deltaY < 0) zoomQuestionImage(1.15);
+          else zoomQuestionImage(0.85);
+        }
       }, { passive: false });
     }
 
-    // ORIENTATION ROTATE TOGGLE LOGIC
-    async function toggleOrientationLock() {
+    // CACHING & OFFLINE HELPERS
+    function cacheDataLocally() {
       try {
-        if (screen.orientation && screen.orientation.lock) {
-          if (screen.orientation.type.startsWith('portrait')) {
-            await screen.orientation.lock('landscape');
-          } else {
-            await screen.orientation.lock('portrait');
-          }
-        } else {
-          document.body.classList.toggle('rotate-90');
-        }
-      } catch (err) {
-        if (!document.fullscreenElement) {
-          document.documentElement.requestFullscreen().then(() => {
-            if (screen.orientation && screen.orientation.lock) {
-              screen.orientation.lock('landscape').catch(() => {});
-            }
-          }).catch(() => {});
-        } else {
-          document.exitFullscreen().catch(() => {});
-        }
+        localStorage.setItem('ksc_formula_data', JSON.stringify(formulaData));
+        localStorage.setItem('ksc_notes_data', JSON.stringify(notesData));
+      } catch (e) {
+        console.warn('LocalStorage quota limit or restricted:', e);
       }
     }
 
-    // AUTOMATIC OFFLINE DOCUMENT & PHOTO CACHING
-    async function cacheDocumentForOffline(url) {
-      if ('caches' in window) {
-        try {
-          const cache = await caches.open('ksc-portal-docs-v1');
-          const fileIdMatch = url.match(/\/d\/([^\/]+)/);
-          const urlsToCache = [url];
-          
-          if (fileIdMatch && fileIdMatch[1]) {
-            urlsToCache.push(`https://drive.google.com/thumbnail?id=${fileIdMatch[1]}&sz=w1200`);
-            urlsToCache.push(`https://drive.google.com/thumbnail?id=${fileIdMatch[1]}&sz=w600`);
-            urlsToCache.push(`https://drive.google.com/file/d/${fileIdMatch[1]}/preview`);
-          }
-
-          urlsToCache.forEach(u => {
-            cache.add(u).catch(() => {});
-          });
-        } catch (e) {
-          console.log('Document CacheStorage active');
-        }
-      }
-    }
-
-    // SERVICE WORKER REGISTRATION
     function registerAutoCacheServiceWorker() {
       if ('serviceWorker' in navigator) {
-        const swBlob = new Blob([`
-          const CACHE_NAME = 'ksc-hsc-2k27-v1';
-          self.addEventListener('install', (e) => {
-            self.skipWaiting();
-          });
-          self.addEventListener('activate', (e) => {
-            e.waitUntil(clients.claim());
-          });
-          self.addEventListener('fetch', (e) => {
-            if (e.request.method !== 'GET') return;
-            e.respondWith(
-              caches.match(e.request).then((cached) => {
-                const networked = fetch(e.request).then((res) => {
-                  if (res && res.status === 200) {
-                    const cacheCopy = res.clone();
-                    caches.open(CACHE_NAME).then((cache) => cache.put(e.request, cacheCopy));
-                  }
-                  return res;
-                }).catch(() => cached);
-                return cached || networked;
-              })
-            );
-          });
-        `], { type: 'application/javascript' });
-
-        const swUrl = URL.createObjectURL(swBlob);
-        navigator.serviceWorker.register(swUrl).catch(() => {});
+        navigator.serviceWorker.register('/sw.js').catch(err => {
+          console.log('SW registration skipped or unsupported in sandboxed environment:', err);
+        });
       }
+    }
+
+    function setupOfflineListener() {
+      function updateStatus() {
+        const banner = document.getElementById('offline-banner');
+        if (banner) {
+          if (!navigator.onLine) {
+            banner.classList.remove('hidden');
+          } else {
+            banner.classList.add('hidden');
+          }
+        }
+      }
+
+      window.addEventListener('online', updateStatus);
+      window.addEventListener('offline', updateStatus);
+      updateStatus();
+    }
+
+    function setupAccessibilityShortcuts() {
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closePdfModal();
+          closeQuestionModal();
+          closeNoticeModal();
+        }
+      });
     }
 
     // INITIALIZATION
@@ -1288,6 +1507,7 @@
       cacheDataLocally();
       registerAutoCacheServiceWorker();
       renderNotes('all');
+      renderFormulas();
       renderClassRoutine('science');
       renderQuestions();
       renderNotices();
